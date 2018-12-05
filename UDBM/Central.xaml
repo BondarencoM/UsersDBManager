@@ -50,8 +50,8 @@
                             <ListBox x:Name="checkedListBox" Grid.Row="1"  ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <ListBoxItem IsSelected="{Binding IsChecked}">
-                                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Item}" />
+                                        <ListBoxItem IsSelected="{Binding isChecked}">
+                                            <CheckBox IsChecked="{Binding isChecked}" Content="{Binding Path=name}" />
                                         </ListBoxItem>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
@@ -76,7 +76,7 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Output">
-                        <DataGrid x:Name="ManageDataGrid" MinHeight="140"/>
+                        <DataGrid x:Name="ManageDataGrid" ItemsSource="{Binding }" MinHeight="140"/>
                     </GroupBox>
                     <Grid Grid.Row="2" Margin="0 10">
                         <Grid.ColumnDefinitions>
@@ -101,13 +101,13 @@
                     </Grid.RowDefinitions>
 
                     <GroupBox Grid.Row="0" Header="Querry">
-                    <TextBox FontSize="18" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
+                    <TextBox x:Name="qInp" FontSize="18" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="File">
                         <StackPanel>
                             <TextBox/>
                         <StackPanel Orientation="Horizontal" Margin="0 10">
-                            <Button Width="85" Margin="5 0" Content="Execute"/>
+                            <Button Click="Button_Click" Width="85" Margin="5 0" Content="Execute"/>
                             <Button Width="85" Margin="5 0" Content="Save"/>
                             <Button Width="85" Margin="5 0" Content="Save as"/>
                         </StackPanel>

@@ -25,7 +25,7 @@ namespace UDBM {
         public string password;
         public string dbVar;
 
-        public DataSet dataGridSet;
+        public DataTable dataGridSet;
         public MySqlDataAdapter MySqldataGridAdaptaer;
         public MySqlCommandBuilder MySqlcmdBldr;
         public NpgsqlDataAdapter PostGresdataGridAdapterl;
@@ -182,9 +182,10 @@ namespace UDBM {
         }
 
 
-        public DataSet GetDataSet(string sqlCommand, string tbname="")
+        public DataTable GetDataSet(string sqlCommand, string tbname="")
         {
             Console.WriteLine("Executing: " + sqlCommand);
+            dataGridSet = new DataTable();
             try
             {
                 switch (dbVar)
@@ -193,31 +194,26 @@ namespace UDBM {
                         Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
                         MySqldataGridAdaptaer = new MySqlDataAdapter(sqlCommand, (MySqlConnection)((DbConnection)connection));
                         MySqlcmdBldr = new MySqlCommandBuilder(MySqldataGridAdaptaer);
-                        dataGridSet = new DataSet();
-
-                        if (!String.IsNullOrWhiteSpace(tbname))
-                            MySqldataGridAdaptaer.Fill(dataGridSet, tbname);
-                        else
                             MySqldataGridAdaptaer.Fill(dataGridSet);
-                        return dataGridSet;
+                        break;
                     case "postgres":
                         Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
                         PostGresdataGridAdapterl = new  NpgsqlDataAdapter (sqlCommand, (NpgsqlConnection)((DbConnection)connection));
                         PostGrescmdBldr = new NpgsqlCommandBuilder(PostGresdataGridAdapterl);
-                        dataGridSet = new DataSet();
-
-                        if (!String.IsNullOrWhiteSpace(tbname))
-                            PostGresdataGridAdapterl.Fill(dataGridSet, tbname);
-                        else
-                            PostGresdataGridAdapterl.Fill(dataGridSet);
-                        return dataGridSet;
-                    default: throw new Exception("No database type selected");
+                        PostGresdataGridAdapterl.Fill(dataGridSet);
+                        break;
+                    default: throw new Exception("DBConnect -> GetDataSet -> Switch not implemented dbvar = " + dbVar);
                 } 
             }
            catch(Exception e){
                MessageBox.Show(e.Message, "UDBM: Error");
                return null;
            }
+            finally
+            {
+                Console.WriteLine("DBConnect -> GetDataSet -> Executed successfullt");
+            }
+            return dataGridSet;
 
         }          
 

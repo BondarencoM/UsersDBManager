@@ -27,7 +27,7 @@ namespace UDBM
         string dbVar, actualDatabase, actualTable;
         string[] highlightKeyWords;
 
-        DataSet ManageDataSet;
+        DataTable ManageDataSet;
 
         public Central()
         {
@@ -128,21 +128,21 @@ namespace UDBM
             }
         }
 
-        public void SelectTable(object sender, TreeViewItem selectedNode = null, string condition = "true")
+        public void SelectTable(object sender, bool doRefresh = false, string condition = "true")
         {
-            /* if (treeViewDatabases.SelectedItem == null || 
+           /*  if (treeViewDatabases.SelectedItem == null || 
                 (TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent != selectedNode.Parent ||
                 treeViewDatabases.SelectedItem != selectedNode)
                 checkedListBox.Items.Clear(); */
+            if(doRefresh) checkedListBox.Items.Clear();
 
-            
             string dbname = actualDatabase;
             string tbname = actualTable;
             string sqlSelectCols = "";
 
-            foreach (string cheSel in checkedListBox.Items)
+            foreach (dbField field in checkedListBox.Items)
             {
-                sqlSelectCols += cheSel + ",";
+                sqlSelectCols += field.name + ",";
             }
             if (!String.IsNullOrWhiteSpace(sqlSelectCols)) sqlSelectCols = sqlSelectCols.Remove(sqlSelectCols.Length - 1);
             else sqlSelectCols = "*";
@@ -168,20 +168,16 @@ namespace UDBM
                     throw new Exception("Switch not implemented at Main.cs SelectTable");
             }
             Console.WriteLine("ListDatabases -> SelectTable: exec querry: " + query);
-            DataSet tableData = db.GetDataSet(query, tbname);
+            DataTable tableData = db.GetDataSet(query, tbname);
             if (tableData != null)
-            {
-                tableData.Tables[0].TableName = "tab";
-                ManageDataGrid.ItemsSource = (IEnumerable)tableData;
-                ManageDataGrid.DisplayMemberPath = "tab";
-                ManageDataSet = db.dataGridSet;
-            }
+                ManageDataGrid.DataContext = tableData;
+
 
             if (checkedListBox.Items.Count < ManageDataGrid.Columns.Count)
             {
                 checkedListBox.Items.Clear();
                 foreach (DataGridColumn column in ManageDataGrid.Columns)
-                    checkedListBox.Items.Add(column.Header);
+                    checkedListBox.Items.Add(new dbField((string)column.Header,false));
             }
 
             if (((string)ManageDataGrid.Columns[0].Header).ToLower() == "id")
@@ -231,21 +227,21 @@ namespace UDBM
             TreeViewItem sel = (TreeViewItem)treeViewDatabases.SelectedItem;
 
             if (sel.Parent != (DependencyObject)treeViewDatabases)
-                this.SelectTable(sender, (TreeViewItem)treeViewDatabases.SelectedItem, userWhere.Text);
+                this.SelectTable(sender, false , userWhere.Text);
             else Console.WriteLine("Central -> RefreshReadData_Click -> Database node Selected");
         }
 
-        public void updateDbFromDataGrid(DataSet data)
+        public void updateDbFromDataGrid(DataTable data)
         {
             try
             {
                 switch (dbVar)
                 {
                     case "mysql":
-                        db.MySqldataGridAdaptaer.Update(data, data.Tables[0].TableName);
+                        db.MySqldataGridAdaptaer.Update(data);
                         break;
                     case "postgres":
-                        db.PostGresdataGridAdapterl.Update(data, data.Tables[0].TableName);
+                        db.PostGresdataGridAdapterl.Update(data);
                         break;
                     default:
                         throw new Exception("Switch not implemented at void updateDbFromDataGrid(DataSet data) dbVar = "+dbVar);
@@ -279,7 +275,7 @@ namespace UDBM
                 actualTable = (string)seletedItem.Header;
                 checkedListBox.Items.Clear();
 
-                this.SelectTable(sender, seletedItem);
+                this.SelectTable(sender, true);
                 refreshDisplayDbTb();
                 PropertiesManageData.Content = "Tab. Properties";
             }
@@ -310,7 +306,7 @@ namespace UDBM
                 TreeNode parent = new TreeNode(actualDatabase, nodes); //setting the parent */
                 userLimit.Text = "";
 
-                this.SelectTable(sender, null, userWhere.Text);
+                this.SelectTable(sender, true, userWhere.Text);
 
                 /*foreach (int i in toCheck)
                     checkedListBox.SetItemChecked(i, true); */
@@ -323,12 +319,25 @@ namespace UDBM
 
         }
 
-
         private void treeViewDatabases_BeforeSelect(object sender, RoutedPropertyChangedEventArgs<object> oe)
         {
-            TreeViewItem newNode = (TreeViewItem)oe.NewValue;
-            TreeViewItem newParent = (TreeViewItem)newNode.Parent;
-            TreeViewItem oldNode = (TreeViewItem)oe.OldValue;
+            TreeViewItem newNode;
+            TreeViewItem newParent;
+            TreeViewItem oldNode;
+            try
+            {
+                newNode = (TreeViewItem)oe.NewValue;
+                 newParent = (TreeViewItem)newNode.Parent;
+                 oldNode = (TreeViewItem)oe.OldValue;
+            }
+            catch(Exception e)
+            {
+
+                Console.WriteLine($"Central -> treeViewDatabases_BeforeSelect -> Error at try {e.Message}");
+                return;
+            }
+
+
             string header = (string)newNode.Header;
             Console.WriteLine($"Select node " + header);
 
@@ -344,17 +353,57 @@ namespace UDBM
                 //this.RenderTableProperties(sender, e.Node);
 
                 PropertiesManageData.Content = "Tab. Properties";
-                this.SelectTable(sender, newNode, userWhere.Text);
+                this.SelectTable(sender, true, userWhere.Text);
             }
             refreshDisplayDbTb();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExecuteQuery(object sender, MouseEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(qInp.Text)) return;
+
+            string result = "";
+            List<List<string>> output = db.Select(qInp.Text);
+            foreach (List<string> list in output)
+            {
+                foreach (string s in list)
+                    result += s + " ";
+                result += Environment.NewLine;
+            }
+
+            if (result == "") result = "Success !";
+            qRez.Text = result;
+
+            if (checkAutoselect.Checked)
+                this.RefreshDatabasesTree();
+
+        }
+
 
         private void refreshDisplayDbTb()
         {
             dispDatabase.Text = actualDatabase ;
             dispTable.Text = actualTable;
         }
+    }
 
+
+    public class dbField
+    {
+        public string name { get; set; }
+        public bool isChecked { get; set; }
+
+        public dbField(string name, bool isChecked)
+        {
+            this.name = name;
+            this.isChecked = isChecked;
+
+        }
 
     }
 }
