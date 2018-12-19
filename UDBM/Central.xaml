@@ -4,38 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UDBM"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d" 
         Loaded="Main_Load" Unloaded="Window_Unloaded"
-        Title="Central" Height="450" Width="600">
-    <Grid>
+        Title="Central" Height="450" Width="600"
+        StateChanged="Window_StateChanged">
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
+        
         <Menu Grid.ColumnSpan="3">
             <MenuItem Height="20" Header="Connection">
-                <MenuItem Height="20" Header="Refresh"/>
-                <MenuItem Height="20" Header="Create another one"/>
-                <MenuItem Height="20" Header="Log out"/>
-                <MenuItem Height="20" Header="Exit application"/>
+                <MenuItem Height="20" Header="Refresh" Click="refreshToolStripMenuItem_Click"/>
+                <MenuItem Height="20" Header="Create another one" Click="createotherOneToolStripMenuItem_Click" />
+                <MenuItem Height="20" Header="Log out" Click="logOutToolStripMenuItem_Click" />
+                <MenuItem Height="20" Header="Exit application" Click="SelectDatabaseForm_FormClosed"/>
             </MenuItem>
             <TextBlock Text="Database:"/>
             <TextBlock x:Name="dispDatabase" />
             <TextBlock Text="Table:"/>
             <TextBlock x:Name="dispTable" />
         </Menu>
-        <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" x:Name="treeViewDatabases" Grid.Row="1">
+        <GridSplitter IsMouseCaptureWithinChanged="GridSplitter_IsMouseCaptureWithinChanged" Width="4" Background="Gray" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Right" Grid.Row="1"  Grid.RowSpan="10" />
+
+
+        <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0 0 5 0" x:Name="treeViewDatabases" Grid.Row="1">
         </TreeView>
         <TabControl Grid.Row="1" Grid.Column="1">
-            <TabItem Header="Manage data">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/img/icnGrid.png" Width="20" />
+                        <TextBlock Margin="5 0 0 0" Text="Manage data" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="3*" />
-                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="10*" MinHeight="175" MaxHeight="225" />
+                        <RowDefinition Height="9*"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <GroupBox Header="Conditions">
@@ -47,15 +59,20 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Text="Select what"/>
-                            <ListBox x:Name="checkedListBox" Grid.Row="1"  ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}">
-                                <ListBox.ItemTemplate>
+                            <!-- <ListBox  x:Name="checkedListBox" Grid.Row="1"  ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}">
+                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <ListBoxItem IsSelected="{Binding isChecked}">
+                                        <ListBoxItem>
                                             <CheckBox IsChecked="{Binding isChecked}" Content="{Binding Path=name}" />
                                         </ListBoxItem>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
-                            </ListBox>
+                            </ListBox> -->
+
+                            <WindowsFormsHost Grid.Row="1" >
+                                <wf:CheckedListBox  MultiColumn="True" CheckOnClick="True" x:Name="checkedListBox" />
+                            </WindowsFormsHost>
+                          
                             <Grid Grid.Row="2" Margin="0 10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -69,14 +86,15 @@
                                 <TextBlock Margin="0 0 5 0" VerticalAlignment="Center" Text="Where"/>
                                 <TextBox x:Name="userWhere" Margin="0 3" Grid.Column="1"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Row="1" Text="Limit"/>
-                                <TextBox x:Name="userLimit" Margin="0 3" Grid.Column="1" Grid.Row="1"/>
-                                <Button x:Name="ManagebtnRefresh"  Margin="4 2" Grid.Column="2" Content="Refresh" />
-                                <Button x:Name="PropertiesManageData" Padding="3 0"  Margin="4 2" Grid.Column="2" Grid.Row="1" Content="Tab. Properties" />
+                                <TextBox x:Name="userLimit" PreviewTextInput="PreviewTextInput" Margin="0 3" Grid.Column="1" Grid.Row="1"/>
+                                <Button x:Name="ManagebtnRefresh"  Margin="4 2" Grid.Column="2" Content="Refresh" Click="RefreshReadData_Click" />
+                                <Button x:Name="PropertiesManageData" Padding="3 0"  Margin="4 2" Click="PropertiesManageData_Click" 
+                                        Grid.Column="2" Grid.Row="1" Content="Tab. Properties" />
                             </Grid>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Output">
-                        <DataGrid x:Name="ManageDataGrid" ItemsSource="{Binding }" MinHeight="140"/>
+                        <DataGrid x:Name="ManageDataGrid" Validation.Error="ManageDataGrid_Error" ItemsSource="{Binding }" MinHeight="140" ColumnWidth="*" />
                     </GroupBox>
                     <Grid Grid.Row="2" Margin="0 10">
                         <Grid.ColumnDefinitions>
@@ -84,13 +102,21 @@
                             <ColumnDefinition Width="*"/>
 
                         </Grid.ColumnDefinitions>
-                        <Button Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3" Content="Apply changes"/>
-                        <CheckBox Grid.Column="1" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
-                        <Button Grid.Column="1" HorizontalAlignment="Right" Padding = "5 3"  Content="Discard changes" />
+
+                        <Button IsEnabled="False" x:Name="ApplyChangesManageData" Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3" Content="Apply changes"/>
+                        <CheckBox Grid.Column="1" Checked="checkBox1_CheckedChanged" Unchecked="checkBox1_CheckedChanged" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
+                        <Button IsEnabled="False" x:Name="DiscardChangesManageData" Click="DiscardChangesReadData_Click" Grid.Column="1" HorizontalAlignment="Right" Padding = "5 3"  Content="Discard changes" />
+                        
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Execute query">
+            <TabItem >
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/img/icnQuery.png" Width="20" />
+                        <TextBlock Margin="5 0 0 0" Text="Execute query" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
 
@@ -101,33 +127,43 @@
                     </Grid.RowDefinitions>
 
                     <GroupBox Grid.Row="0" Header="Querry">
-                    <TextBox x:Name="qInp" FontSize="18" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
+                        <WindowsFormsHost Grid.Row="1">
+                            <wf:RichTextBox x:Name="qInp" AcceptsTab="True" TextChanged="qInp_TextChanged" />
+                        </WindowsFormsHost>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="File">
                         <StackPanel>
-                            <TextBox/>
-                        <StackPanel Orientation="Horizontal" Margin="0 10">
-                            <Button Click="Button_Click" Width="85" Margin="5 0" Content="Execute"/>
-                            <Button Width="85" Margin="5 0" Content="Save"/>
-                            <Button Width="85" Margin="5 0" Content="Save as"/>
+                            <TextBox x:Name="queryName"/>
+                            <StackPanel Orientation="Horizontal" Margin="0 10">
+                                <Button Click="ExecuteQuery" Width="85" Margin="5 0" Content="Execute"/>
+                                <Button Click ="button1_Click_1" Width="85" Margin="5 0" Content="Save"/>
+                                <Button Click="bSaveQuery_Click" Width="85" Margin="5 0" Content="Save as"/>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 10" Orientation="Horizontal">
+                                <Button Width="85" Margin="5 0" Click="bOpenQuery_Click" Content="Open Querry"/>
+                                <Button Width="85" Margin="5 0" Click="buttonNewQuery" Content="New Querry"/>
+                                <Button Width="85" Margin="5 0" Click="EveClearOutput" Content="Clear Output"/>
+                                <CheckBox IsChecked="True" x:Name="checkAutoselect" Content="Auto refresh" />
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Margin="0 0 0 10" Orientation="Horizontal">
-                            <Button Width="85" Margin="5 0" Content="Open Querry"/>
-                            <Button Width="85" Margin="5 0" Content="New Querry"/>
-                            <Button Width="85" Margin="5 0" Content="Clear Output"/>
-                        </StackPanel>
-                    </StackPanel>
                     </GroupBox>
                     <GroupBox Grid.Row="2" Header="Output">
-                    <TextBox Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
+                    <TextBox x:Name="qRez" Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
                     </GroupBox>
                     <StatusBar Grid.Row="3">
-                        <StatusBarItem Content="Saved"/>
+                        <StatusBarItem x:Name="toolStripStatusLabel1" Content="Saved"/>
+                        <StatusBarItem x:Name="toolStripStatusLabel2" />
                     </StatusBar>
                         
                 </Grid>
             </TabItem>
-            <TabItem Header="Table properties">
+            <TabItem >
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/img/icnGear.png" Width="20" />
+                        <TextBlock Margin="5 0 0 0" Text="Table properties" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -142,19 +178,23 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBox x:Name="tPropName" />
-                            <Button Content="Rename" Grid.Column="1" Padding="7 0" Margin="7 0" />
-                            <Button Content="Cancel" Grid.Column="2" Padding="8 0" Margin="0 0 7 0" />
+                            <Button Content="Rename" Click="tPropSave_Click" Grid.Column="1" Padding="7 0" Margin="7 0" />
+                            <Button Content="Cancel" Click="btnRenameCancel_Click" Grid.Column="2" Padding="8 0" Margin="0 0 7 0" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="2" Header="Risk Zone">
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Padding="10" Margin="10 5" Width="90" Content="Delete all"/>
-                            <Button Padding="10" Margin="10 5" Width="90" Content="Drop table"/>
-                            <Button Padding="10" Margin="10 5" Width="90" Content="Truncate"/>
+                            <Button Click="tPropDelAll_Click" Padding="10" Margin="10 5" Width="90" Content="Delete all"/>
+                            <Button Click="button1_Click" Padding="10" Margin="10 5" Width="90" Content="Drop table"/>
+                            <Button Click="tPropTrunc_Click" Padding="10" Margin="10 5" Width="90" Content="Truncate"/>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
             </TabItem>
+            <TabItem IsEnabled="False" BorderBrush="White" Background="White" Header="Database" Foreground="Black">
+                
+            </TabItem>
+
         </TabControl>
     </Grid>
 </Window> 

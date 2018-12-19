@@ -194,7 +194,7 @@ namespace UDBM {
                         Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
                         MySqldataGridAdaptaer = new MySqlDataAdapter(sqlCommand, (MySqlConnection)((DbConnection)connection));
                         MySqlcmdBldr = new MySqlCommandBuilder(MySqldataGridAdaptaer);
-                            MySqldataGridAdaptaer.Fill(dataGridSet);
+                        MySqldataGridAdaptaer.Fill(dataGridSet);
                         break;
                     case "postgres":
                         Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
@@ -209,10 +209,7 @@ namespace UDBM {
                MessageBox.Show(e.Message, "UDBM: Error");
                return null;
            }
-            finally
-            {
                 Console.WriteLine("DBConnect -> GetDataSet -> Executed successfullt");
-            }
             return dataGridSet;
 
         }          

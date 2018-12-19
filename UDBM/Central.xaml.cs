@@ -4,8 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,9 +20,7 @@ using System.Windows.Shapes;
 
 namespace UDBM
 {
-    /// <summary>
-    /// Interaction logic for Central.xaml
-    /// </summary>
+    
     public partial class Central : Window
     {
         dynamic db;
@@ -29,8 +29,14 @@ namespace UDBM
 
         DataTable ManageDataSet;
 
+        System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        System.Windows.Forms.Timer highlightTimer;
+        System.Windows.Forms.OpenFileDialog openFileDialog1;
+
         public Central()
         {
+
+
             InitializeComponent();
             highlightKeyWords = ("select use insert create values table database column alter change drop and or abs sum avg * as null int char" +
                                   "varchar text blob decimal float where limit day month year desc delete trunc truncate transaction rollback" +
@@ -40,9 +46,21 @@ namespace UDBM
         public Central(string host, string user, string pass, string type)
         {
             InitializeComponent();
+
             highlightKeyWords = ("select use insert create values table database column alter change drop and or abs sum avg * as null int char" +
                                   "varchar text blob decimal float where limit day month year desc delete trunc truncate transaction rollback" +
                                   "commit floor ceiling from if in isnull is like join schema with union all inner outter right left not").Split(' ');
+            saveFileDialog1 = new System.Windows.Forms.SaveFileDialog()
+            { AddExtension=true, DefaultExt=".sql", Filter = "Sql file (*.sql)|*.sql|Text File (*.txt)|*.txt|All files (*.*)|*.*" };
+           
+            openFileDialog1 = new System.Windows.Forms.OpenFileDialog()
+            { CheckFileExists=true, Filter = "Sql file (*.sql)|*.sql|Text File (*.txt)|*.txt|All files (*.*)|*.*" };
+
+            highlightTimer = new System.Windows.Forms.Timer();
+            highlightTimer.Tick += highlightTimer_Tick;
+
+ 
+            
 
             switch (type)
             {
@@ -57,9 +75,20 @@ namespace UDBM
                     dbVar = "postgres";
                     break;
                 default:
-                    MessageBox.Show("Main.cs Constructor switch not implemented type = "+type);
+                    MessageBox.Show("Main.cs Constructor switch not implemented type = " + type);
                     break;
             }
+
+        }
+
+        #region General
+        private void Main_Load(object sender, EventArgs e)
+        {
+            this.Owner.Hide();
+
+            Console.WriteLine("Main_Load -> Start ListDatabases();");
+            ListDatabases();
+            Console.WriteLine("Main_Load -> Databases Listed");
         }
 
         private void ListDatabases()
@@ -118,7 +147,7 @@ namespace UDBM
                         Console.WriteLine("ListDatabases -> Set tabele: " + tbnames[0]);
                         dbNode.Items.Add(new TreeViewItem() { Header = tbnames[0] });
                     }
-  
+
                     treeViewDatabases.Items.Add(dbNode);
                 }
             }
@@ -128,21 +157,51 @@ namespace UDBM
             }
         }
 
+        private void RefreshDatabasesTree()
+        {
+            TreeViewItem selectedNode = (TreeViewItem)treeViewDatabases.SelectedItem;
+            treeViewDatabases.Items.Clear();
+            this.ListDatabases();
+
+            var tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[0]) as TreeViewItem;
+            if (tvi != null) tvi.IsSelected = true;
+
+            checkedListBox.Items.Clear();
+
+            ManageDataGrid.DataContext = null;
+
+            tPropName.Text = "";
+
+            userLimit.Text = "";
+            userWhere.Text = "";
+
+            dispDatabase.Text = "";
+            dispTable.Text = "";
+
+            // if (((TreeViewItem)treeViewDatabases.SelectedItem).Parent != treeViewDatabases)
+            //     ((TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent).IsExpanded = true;
+
+
+
+
+
+        }
+
         public void SelectTable(object sender, bool doRefresh = false, string condition = "true")
         {
-           /*  if (treeViewDatabases.SelectedItem == null || 
-                (TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent != selectedNode.Parent ||
-                treeViewDatabases.SelectedItem != selectedNode)
-                checkedListBox.Items.Clear(); */
-            if(doRefresh) checkedListBox.Items.Clear();
+            /*  if (treeViewDatabases.SelectedItem == null || 
+                 (TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent != selectedNode.Parent ||
+                 treeViewDatabases.SelectedItem != selectedNode)
+                 checkedListBox.Items.Clear(); */
+            if (doRefresh) checkedListBox.Items.Clear();
 
             string dbname = actualDatabase;
             string tbname = actualTable;
             string sqlSelectCols = "";
 
-            foreach (dbField field in checkedListBox.Items)
+            foreach (string col in checkedListBox.CheckedItems)
             {
-                sqlSelectCols += field.name + ",";
+                sqlSelectCols += col + ",";
             }
             if (!String.IsNullOrWhiteSpace(sqlSelectCols)) sqlSelectCols = sqlSelectCols.Remove(sqlSelectCols.Length - 1);
             else sqlSelectCols = "*";
@@ -170,64 +229,66 @@ namespace UDBM
             Console.WriteLine("ListDatabases -> SelectTable: exec querry: " + query);
             DataTable tableData = db.GetDataSet(query, tbname);
             if (tableData != null)
+            {
                 ManageDataGrid.DataContext = tableData;
+                ManageDataSet = tableData;
+
+                //tableData.
+            }
 
 
             if (checkedListBox.Items.Count < ManageDataGrid.Columns.Count)
             {
                 checkedListBox.Items.Clear();
                 foreach (DataGridColumn column in ManageDataGrid.Columns)
-                    checkedListBox.Items.Add(new dbField((string)column.Header,false));
+                    checkedListBox.Items.Add((string)column.Header);
+
             }
 
-            if (((string)ManageDataGrid.Columns[0].Header).ToLower() == "id")
-                ManageDataGrid.Columns[0].Width = 50;
+            foreach (DataGridColumn column in ManageDataGrid.Columns)
+            {
+                column.Width = new DataGridLength(1.0, DataGridLengthUnitType.Auto);
+            }
+
+
+            /* if ( ManageDataGrid.Columns.Count!=0 && ((string)ManageDataGrid.Columns[0].Header).ToLower() == "id")
+                 ManageDataGrid.Columns[0].Width = 50;*/
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Owner.Hide();
-
-            Console.WriteLine("Main_Load -> Start ListDatabases();");
-            ListDatabases();
-            Console.WriteLine("Main_Load -> Databases Listed");
+            this.Owner.Show();
         }
 
-        private void RefreshDatabasesTree()
+        private void Window_StateChanged(object sender, EventArgs e)
         {
-            TreeViewItem selectedNode = (TreeViewItem)treeViewDatabases.SelectedItem;
-            treeViewDatabases.Items.Clear();
-            this.ListDatabases();
-
-            var tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[0]) as TreeViewItem;
-            if (tvi != null) tvi.IsSelected = true;
-
-            checkedListBox.Items.Clear();
-            ManageDataGrid.ItemsSource = null;
-
-            tPropName.Text = "";
-
-            userLimit.Text = "";
-            userWhere.Text = "";
-
-            dispDatabase.Text = "";
-            dispTable.Text = "";
-
-           // if (((TreeViewItem)treeViewDatabases.SelectedItem).Parent != treeViewDatabases)
-                ((TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent).IsExpanded = true;
-
-            
-
-
-
+            // event ay be removed at GridSplitter_IsMouseCaptureWithinChanged()
+            if (WindowState == WindowState.Maximized) 
+                MainGrid.ColumnDefinitions[0].Width = new GridLength(2.0, GridUnitType.Star);
+            else
+                MainGrid.ColumnDefinitions[0].Width = new GridLength(4.0, GridUnitType.Star);
         }
 
+        private void GridSplitter_IsMouseCaptureWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            this.StateChanged -= Window_StateChanged;
+        }
+
+        private void refreshDisplayDbTb()
+        {
+            dispDatabase.Text = actualDatabase;
+            dispTable.Text = actualTable;
+        }
+
+        #endregion
+
+        #region Manage Data
         private void RefreshReadData_Click(object sender, EventArgs e)
         {
             TreeViewItem sel = (TreeViewItem)treeViewDatabases.SelectedItem;
 
             if (sel.Parent != (DependencyObject)treeViewDatabases)
-                this.SelectTable(sender, false , userWhere.Text);
+                this.SelectTable(sender, false, userWhere.Text);
             else Console.WriteLine("Central -> RefreshReadData_Click -> Database node Selected");
         }
 
@@ -244,23 +305,18 @@ namespace UDBM
                         db.PostGresdataGridAdapterl.Update(data);
                         break;
                     default:
-                        throw new Exception("Switch not implemented at void updateDbFromDataGrid(DataSet data) dbVar = "+dbVar);
+                        throw new Exception("Switch not implemented at void updateDbFromDataGrid(DataSet data) dbVar = " + dbVar);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "UDBM: Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "UDBM: Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnSaveGridData_Click(object sender, EventArgs e)
         {
             updateDbFromDataGrid(ManageDataSet);
-        }
-
-        private void Window_Unloaded(object sender, RoutedEventArgs e)
-        {
-            this.Owner.Show();
         }
 
         private void PropertiesManageData_Click(object sender, EventArgs e)
@@ -308,8 +364,8 @@ namespace UDBM
 
                 this.SelectTable(sender, true, userWhere.Text);
 
-                /*foreach (int i in toCheck)
-                    checkedListBox.SetItemChecked(i, true); */
+                foreach (int i in toCheck)
+                    checkedListBox.SetItemChecked(i, true);
                 RefreshReadData_Click(sender, e);
 
                 PropertiesManageData.Content = "Manage Data";
@@ -327,13 +383,13 @@ namespace UDBM
             try
             {
                 newNode = (TreeViewItem)oe.NewValue;
-                 newParent = (TreeViewItem)newNode.Parent;
-                 oldNode = (TreeViewItem)oe.OldValue;
+                newParent = (TreeViewItem)newNode.Parent;
+                oldNode = (TreeViewItem)oe.OldValue;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
-                Console.WriteLine($"Central -> treeViewDatabases_BeforeSelect -> Error at try {e.Message}");
+                Console.WriteLine($"Central -> treeViewDatabases_BeforeSelect -> Error at try, Message: {e.Message}");
                 return;
             }
 
@@ -358,12 +414,40 @@ namespace UDBM
             refreshDisplayDbTb();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void DiscardChangesReadData_Click(object sender, EventArgs e)
         {
-
+            SelectTable(sender, true);
         }
 
-        private void ExecuteQuery(object sender, MouseEventArgs e)
+        private void PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+        
+        private void checkBox1_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (DiscardChangesManageData == null) return;
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                DiscardChangesManageData.IsEnabled = false;
+                ApplyChangesManageData.IsEnabled = false;
+                ManageDataGrid.RowEditEnding += btnSaveGridData_Click;
+            }
+            else
+            {
+                DiscardChangesManageData.IsEnabled = true;
+                ApplyChangesManageData.IsEnabled = true;
+                ManageDataGrid.RowEditEnding -= btnSaveGridData_Click;
+            }
+        }
+
+
+        #endregion
+
+        #region Execute Querry
+
+        private void ExecuteQuery(object sender, RoutedEventArgs e)
         {
             if (String.IsNullOrWhiteSpace(qInp.Text)) return;
 
@@ -379,20 +463,250 @@ namespace UDBM
             if (result == "") result = "Success !";
             qRez.Text = result;
 
-            if (checkAutoselect.Checked)
+            if (checkAutoselect.IsChecked == true)
                 this.RefreshDatabasesTree();
 
         }
 
-
-        private void refreshDisplayDbTb()
+        private void buttonNewQuery(object sender, RoutedEventArgs e)
         {
-            dispDatabase.Text = actualDatabase ;
-            dispTable.Text = actualTable;
+            if ((string)toolStripStatusLabel1.Content == "Unsaved")
+                if (MessageBox.Show("Do you want to save the current querry? ", "UDBM: Mysql", MessageBoxButton.YesNo) != MessageBoxResult.No)
+                    this.button1_Click_1(sender, e);
+            qRez.Text = "";
+            qInp.Text = "";
+            queryName.Text = "";
+            toolStripStatusLabel1.Content = "";
+            toolStripStatusLabel2.Content = "";
         }
+
+        private void EveClearOutput(object sender, RoutedEventArgs e)
+        {
+            qRez.Text = "";
+        }
+
+        private void bSaveQuery_Click(object sender, RoutedEventArgs e)
+        {
+            saveFileDialog1.FileName = queryName.Text;
+            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                toolStripStatusLabel2.Content = saveFileDialog1.FileName;
+                queryName.Text = saveFileDialog1.FileName.Split('\\').Last();
+                try
+                {
+                    qInp.SaveFile((string)toolStripStatusLabel2.Content, System.Windows.Forms.RichTextBoxStreamType.PlainText);
+                    toolStripStatusLabel1.Content = "Saved";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    toolStripStatusLabel1.Content = "Unsaved";
+                }
+            }
+        }
+
+        private void button1_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace((string)toolStripStatusLabel2.Content))
+            {
+                qInp.SaveFile((string)toolStripStatusLabel2.Content, System.Windows.Forms.RichTextBoxStreamType.PlainText);
+                toolStripStatusLabel1.Content = "Saved";
+            }
+            else
+                this.bSaveQuery_Click(sender, e);
+        }
+
+        private void bOpenQuery_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string)toolStripStatusLabel1.Content == "Unsaved")
+                if (MessageBox.Show("Do you want to save the current querry? ", "UDBM: Mysql", MessageBoxButton.YesNo) != MessageBoxResult.No)
+                    this.button1_Click_1(sender, e);
+            qRez.Text = "";
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                qInp.LoadFile(openFileDialog1.FileName, System.Windows.Forms.RichTextBoxStreamType.PlainText);
+                queryName.Text = openFileDialog1.FileName.Split('\\').Last();
+                toolStripStatusLabel2.Content = openFileDialog1.FileName;
+            }
+        }
+
+
+        private void qInp_TextChanged(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Content = "Unsaved";
+
+            if (highlightTimer.Enabled == false)
+                highlightTimer.Enabled = true;
+        }
+
+        private void highlightTimer_Tick(object sender, EventArgs e)
+        {
+
+            int selStart = qInp.SelectionStart;
+            qInp.Enabled = false;
+            qInp.SelectAll();
+            qInp.SelectionColor = System.Drawing.Color.Black;
+            qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Regular);
+            qInp.Select(qInp.Text.Length, 0);
+
+            foreach (string s in highlightKeyWords)
+                CheckKeyword(s, System.Drawing.Color.Purple, 0);
+            highlightTimer.Enabled = false;
+
+            qInp.Enabled = true;
+            qInp.Focus();
+            qInp.SelectionStart = selStart;
+        }
+
+        private void CheckKeyword(string word, System.Drawing.Color color, int startIndex)
+        {
+            if (qInp.Text.ToLower().Contains(word))
+            {
+                int index = -1;
+                int selectStart = qInp.SelectionStart;
+
+                while ((index = qInp.Text.ToLower().IndexOf(word, (index + 1))) != -1)
+                {
+
+                    int endSel = index + word.Length;
+                    bool isKeyWord = true;
+
+                    if (endSel < qInp.Text.Length && !Char.IsWhiteSpace(qInp.Text[endSel])) isKeyWord = false;
+                    if (index - 1 > 0 && !Char.IsWhiteSpace(qInp.Text[index - 1])) isKeyWord = false;
+
+                    if (isKeyWord)
+                    {
+                        qInp.Select((index), word.Length);
+                        qInp.SelectionColor = color;
+                        qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Bold);
+
+                        qInp.Select(selectStart, 0);
+                        qInp.SelectionColor = System.Drawing.Color.Black;
+                        qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Regular);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Properties
+        private void tPropSave_Click(object sender, RoutedEventArgs e)
+        {
+            string selecteTable = (string)((TreeViewItem)treeViewDatabases.SelectedItem).Header;
+            if ((string)tPropName.Text == selecteTable) return;
+            if (String.IsNullOrWhiteSpace(tPropName.Text)) return;
+
+            try
+            {
+                List<List<string>> rez = db.Select("ALTER TABLE " + selecteTable + " RENAME TO " + tPropName.Text);
+                this.RefreshDatabasesTree();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnRenameCancel_Click(object sender, RoutedEventArgs e)
+        {
+            tPropName.Text = "";
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            string selecteTable = (string)((TreeViewItem)treeViewDatabases.SelectedItem).Header;
+            try
+            {
+                string querry = $"DROP TABLE  {selecteTable} ;";
+                if (MessageBox.Show("Are you sure you want to execute ? \n " + querry, "UDBM Error", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    List<List<string>> rez = db.Select(querry);
+                    this.RefreshDatabasesTree();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void tPropDelAll_Click(object sender, RoutedEventArgs e)
+        {
+            string selecteTable = (string)((TreeViewItem)treeViewDatabases.SelectedItem).Header;
+            try
+            {
+                string querry = $"delete from {selecteTable} ;";
+                if (MessageBox.Show("Are you sure you want to execute ? \n " + querry, "UDBM:MySQL", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    List<List<string>> rez = db.Select(querry);
+                    this.RefreshDatabasesTree();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void tPropTrunc_Click(object sender, RoutedEventArgs e)
+        {
+            string selecteTable = (string)((TreeViewItem)treeViewDatabases.SelectedItem).Header;
+            try
+            {
+                string querry = $"Truncate TABLE {selecteTable} ;";
+                if (MessageBox.Show("Are you sure you want to execute ? \n " + querry, "UDBM:MySQL", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    List<List<string>> rez = db.Select(querry);
+                    this.RefreshDatabasesTree();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Menu strip
+        private void logOutToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void createotherOneToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            
+            this.Owner.Show();
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void SelectDatabaseForm_FormClosed(object sender, RoutedEventArgs e)
+        {
+            //this.Owner.Show();
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void btnSaveGridData_Click(object sender, RoutedEventArgs e)
+        {
+            updateDbFromDataGrid(ManageDataSet);
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.RefreshDatabasesTree();
+        }
+
+        private void ManageDataGrid_Error(object sender, ValidationErrorEventArgs e)
+        {
+            MessageBox.Show(e.Error.Exception.Message, "UDBM:Data grid error ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        #endregion
+
     }
 
-
+    /*
     public class dbField
     {
         public string name { get; set; }
@@ -406,4 +720,26 @@ namespace UDBM
         }
 
     }
+*/
 }
+
+/*
+To do:
+ * Shortcuts
+ * Github
+ * Mai multe baze de date
+ *  Oracle
+ *  MS Server
+ * Lucru cu scheme
+ * De permis de introdus orice querry in Manage data
+ * Careva probleme cu auto apply
+ * rename pentru Postgre
+ * Create another one z-index la fora de logare
+ * refactoring la denmiri
+ * Preferences
+        modul de fit la datagrid
+        default limit
+ * DB-s expand all
+ *
+ * 
+*/
