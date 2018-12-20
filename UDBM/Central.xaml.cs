@@ -57,10 +57,7 @@ namespace UDBM
             { CheckFileExists=true, Filter = "Sql file (*.sql)|*.sql|Text File (*.txt)|*.txt|All files (*.*)|*.*" };
 
             highlightTimer = new System.Windows.Forms.Timer();
-            highlightTimer.Tick += highlightTimer_Tick;
-
- 
-            
+            highlightTimer.Tick += highlightTimer_Tick;      
 
             switch (type)
             {
@@ -705,28 +702,23 @@ namespace UDBM
         #endregion
 
     }
-
-    /*
-    public class dbField
+    public static class Gestures
     {
-        public string name { get; set; }
-        public bool isChecked { get; set; }
+        public static RoutedCommand MyCommand = new RoutedCommand();
 
-        public dbField(string name, bool isChecked)
+        public static void Create()
         {
-            this.name = name;
-            this.isChecked = isChecked;
 
         }
 
     }
-*/
 }
 
 /*
 To do:
  * Shortcuts
  * Github
+ * Default limit
  * Mai multe baze de date
  *  Oracle
  *  MS Server
