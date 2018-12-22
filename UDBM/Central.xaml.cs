@@ -45,6 +45,8 @@ namespace UDBM
 
         public Central(string host, string user, string pass, string type)
         {
+            Gestures.Load();
+
             InitializeComponent();
 
             highlightKeyWords = ("select use insert create values table database column alter change drop and or abs sum avg * as null int char" +
@@ -74,8 +76,8 @@ namespace UDBM
                 default:
                     MessageBox.Show("Main.cs Constructor switch not implemented type = " + type);
                     break;
-            }
-
+            };
+           
         }
 
         #region General
@@ -701,13 +703,49 @@ namespace UDBM
 
         #endregion
 
+        #region hotkeys
+        public void eveGoToTab (int tab)
+        {
+            Console.WriteLine($"Moving to tab nr {tab}");
+           // WorkingArea.SelectedIndex = tab;
+            WorkingArea.SelectedItem = WorkingArea.Items[tab];
+        }
+
+        public void eveGoToTab1 (object sender, RoutedEventArgs e)
+        {
+            eveGoToTab(0);
+        }
+
+        private void CommandBinding_CanExecute_True(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        public void eveGoToTab2(object sender, RoutedEventArgs e)
+        {
+            eveGoToTab(1);
+        }
+
+        public void eveGoToTab3(object sender, RoutedEventArgs e)
+        {
+            eveGoToTab(2);
+        }
+
+        #endregion
+
     }
     public static class Gestures
     {
-        public static RoutedCommand MyCommand = new RoutedCommand();
+        public static RoutedCommand gestGoToTab1 = new RoutedCommand();
+        public static RoutedCommand gestGoToTab2 = new RoutedCommand();
+        public static RoutedCommand gestGoToTab3 = new RoutedCommand();
 
-        public static void Create()
+        public static void Load()
         {
+            gestGoToTab1.InputGestures.Add(new KeyGesture(Key.D1, ModifierKeys.Control));
+            gestGoToTab2.InputGestures.Add(new KeyGesture(Key.D2, ModifierKeys.Control));
+            gestGoToTab3.InputGestures.Add(new KeyGesture(Key.D3, ModifierKeys.Control));
+
 
         }
 

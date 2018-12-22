@@ -9,6 +9,12 @@
         Loaded="Main_Load" Unloaded="Window_Unloaded"
         Title="Central" Height="450" Width="600"
         StateChanged="Window_StateChanged">
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:Gestures.gestGoToTab1}" Executed="eveGoToTab1" CanExecute="CommandBinding_CanExecute_True" />
+        <CommandBinding Command="{x:Static local:Gestures.gestGoToTab2}" Executed="eveGoToTab2" CanExecute="CommandBinding_CanExecute_True" />
+        <CommandBinding Command="{x:Static local:Gestures.gestGoToTab3}" Executed="eveGoToTab3" CanExecute="CommandBinding_CanExecute_True" />
+    </Window.CommandBindings>
+
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -26,6 +32,7 @@
                 <MenuItem Height="20" Header="_Log out" Click="logOutToolStripMenuItem_Click" />
                 <MenuItem Height="20" Header="_Exit application" Click="SelectDatabaseForm_FormClosed"/>
             </MenuItem>
+
             <TextBlock Text="Database:"/>
             <TextBlock x:Name="dispDatabase" />
             <TextBlock Text="Table:"/>
@@ -37,7 +44,10 @@
 
         <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0 0 5 0" x:Name="treeViewDatabases" Grid.Row="1">
         </TreeView>
-        <TabControl Grid.Row="1" Grid.Column="1">
+        <TabControl x:Name="WorkingArea" Grid.Row="1" Grid.Column="1">
+            <TabControl.CommandBindings>
+                
+            </TabControl.CommandBindings>
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
