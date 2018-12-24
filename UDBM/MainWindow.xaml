@@ -9,7 +9,7 @@
         Icon="Icon1.ico">
     <Window.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="0 0 0 5" />
+            <Setter x:Name="TextBoxStyle" Property="Margin" Value="0 0 0 5" />
         </Style>
     </Window.Resources>
     <Grid>
