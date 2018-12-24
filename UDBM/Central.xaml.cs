@@ -703,7 +703,7 @@ namespace UDBM
 
         #endregion
 
-        #region hotkeys
+        #region Hotkeys
         public void eveGoToTab (int tab)
         {
             Console.WriteLine($"Moving to tab nr {tab}");
@@ -736,17 +736,43 @@ namespace UDBM
     }
     public static class Gestures
     {
+        //tabs
         public static RoutedCommand gestGoToTab1 = new RoutedCommand();
         public static RoutedCommand gestGoToTab2 = new RoutedCommand();
         public static RoutedCommand gestGoToTab3 = new RoutedCommand();
-
+        //Manage Data
+        public static RoutedCommand gestRefresh = new RoutedCommand();
+        public static RoutedCommand gestProperties = new RoutedCommand();
+        public static RoutedCommand gestApplyChanges = new RoutedCommand();
+        //Execute querry
+        public static RoutedCommand gestExecuteQuery = new RoutedCommand();
+        public static RoutedCommand gestNewQuery = new RoutedCommand();
+        public static RoutedCommand gestSaveQuery = new RoutedCommand();
+        public static RoutedCommand gestSaveAsQuery = new RoutedCommand();
+        public static RoutedCommand gestOpeneQuery = new RoutedCommand();
+        //other
+        //public static RoutedCommand gestPrefs = new RoutedCommand();
         public static void Load()
         {
+            //tabs
             gestGoToTab1.InputGestures.Add(new KeyGesture(Key.D1, ModifierKeys.Control));
+            gestGoToTab1.InputGestures.Add(new KeyGesture(Key.M, ModifierKeys.Control));
             gestGoToTab2.InputGestures.Add(new KeyGesture(Key.D2, ModifierKeys.Control));
+            gestGoToTab2.InputGestures.Add(new KeyGesture(Key.E, ModifierKeys.Control));
             gestGoToTab3.InputGestures.Add(new KeyGesture(Key.D3, ModifierKeys.Control));
-
-
+            gestGoToTab3.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control));
+            //Manage Data
+            gestRefresh.InputGestures.Add(new KeyGesture(Key.R, ModifierKeys.Control));
+            gestProperties.InputGestures.Add(new KeyGesture(Key.P, ModifierKeys.Control));
+            gestApplyChanges.InputGestures.Add(new KeyGesture(Key.Enter, ModifierKeys.Control));
+            //Execute Query
+            gestExecuteQuery.InputGestures.Add(new KeyGesture(Key.F5));
+            gestNewQuery.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control));
+            gestSaveQuery.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control));
+            gestSaveAsQuery.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift));
+            gestOpeneQuery.InputGestures.Add(new KeyGesture(Key.O, ModifierKeys.Control));
+            //other
+            
         }
 
     }
@@ -755,7 +781,6 @@ namespace UDBM
 /*
 To do:
  * Shortcuts
- * Github
  * Default limit
  * Mai multe baze de date
  *  Oracle
