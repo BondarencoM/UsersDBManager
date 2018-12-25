@@ -320,8 +320,18 @@ namespace UDBM
 
         private void PropertiesManageData_Click(object sender, EventArgs e)
         {
-            TreeViewItem selectedItem = (TreeViewItem)treeViewDatabases.SelectedItem;
-            TreeViewItem parentItem = (TreeViewItem)selectedItem.Parent;
+            TreeViewItem selectedItem;
+            TreeViewItem parentItem;
+            try
+            {
+                selectedItem = (TreeViewItem)treeViewDatabases.SelectedItem;
+                parentItem = (TreeViewItem)selectedItem.Parent;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Eror at Try Catch at PropertiesManageData_Click. Message: " + ex.Message);
+                return;
+            }
             if ((string)PropertiesManageData.Content == "Manage Data")
             {
                 TreeViewItem seletedItem = (TreeViewItem)treeViewDatabases.SelectedItem;
@@ -441,6 +451,10 @@ namespace UDBM
             }
         }
 
+        private void btnSaveGridData_Click(object sender, RoutedEventArgs e)
+        {
+            updateDbFromDataGrid(ManageDataSet);
+        }
 
         #endregion
 
@@ -686,11 +700,6 @@ namespace UDBM
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void btnSaveGridData_Click(object sender, RoutedEventArgs e)
-        {
-            updateDbFromDataGrid(ManageDataSet);
-        }
-
         private void refreshToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.RefreshDatabasesTree();
@@ -721,6 +730,28 @@ namespace UDBM
             e.CanExecute = true;
         }
 
+        private void ExecuteQuery_CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            if (WorkingArea.SelectedIndex == 1) e.CanExecute = true;
+            else e.CanExecute = false;
+        }
+
+        private void qInp_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.F5)
+                ExecuteQuery(sender, null);
+            else if (e.KeyCode == System.Windows.Forms.Keys.N && e.Control == true)
+                buttonNewQuery(sender, null);
+            else if (e.KeyCode == System.Windows.Forms.Keys.S && e.Control == true)
+                button1_Click_1(sender, null);
+            else if (e.KeyCode == System.Windows.Forms.Keys.S && e.Control == true && e.Shift == true)
+                bSaveQuery_Click(sender, null);
+            else if (e.KeyCode == System.Windows.Forms.Keys.O && e.Control == true)
+                bOpenQuery_Click(sender, null);
+
+        }
+
         public void eveGoToTab2(object sender, RoutedEventArgs e)
         {
             eveGoToTab(1);
@@ -730,6 +761,8 @@ namespace UDBM
         {
             eveGoToTab(2);
         }
+
+
 
         #endregion
 
@@ -773,7 +806,7 @@ namespace UDBM
             gestOpeneQuery.InputGestures.Add(new KeyGesture(Key.O, ModifierKeys.Control));
             //other
             
-        }
+                }
 
     }
 }
@@ -782,6 +815,7 @@ namespace UDBM
 To do:
  * Shortcuts
  * Default limit
+ * After tabel properties "where" field doesn't clear
  * Mai multe baze de date
  *  Oracle
  *  MS Server

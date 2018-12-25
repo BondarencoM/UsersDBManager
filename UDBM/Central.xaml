@@ -10,9 +10,22 @@
         Title="Central" Height="450" Width="600"
         StateChanged="Window_StateChanged">
     <Window.CommandBindings>
+        <!--Tabs -->
         <CommandBinding Command="{x:Static local:Gestures.gestGoToTab1}" Executed="eveGoToTab1" CanExecute="CommandBinding_CanExecute_True" />
         <CommandBinding Command="{x:Static local:Gestures.gestGoToTab2}" Executed="eveGoToTab2" CanExecute="CommandBinding_CanExecute_True" />
         <CommandBinding Command="{x:Static local:Gestures.gestGoToTab3}" Executed="eveGoToTab3" CanExecute="CommandBinding_CanExecute_True" />
+        <!--Manage Data -->
+        <CommandBinding Command="{x:Static local:Gestures.gestRefresh}" Executed="RefreshReadData_Click" CanExecute="CommandBinding_CanExecute_True" />
+        <CommandBinding Command="{x:Static local:Gestures.gestProperties}" Executed="PropertiesManageData_Click" CanExecute="CommandBinding_CanExecute_True" />
+        <CommandBinding Command="{x:Static local:Gestures.gestApplyChanges}" Executed="btnSaveGridData_Click" CanExecute="CommandBinding_CanExecute_True" />
+        <!--Execute Query -->
+        <CommandBinding Command="{x:Static local:Gestures.gestExecuteQuery}" Executed="ExecuteQuery" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
+        <CommandBinding Command="{x:Static local:Gestures.gestNewQuery}" Executed="buttonNewQuery" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
+        <CommandBinding Command="{x:Static local:Gestures.gestSaveQuery}" Executed="button1_Click_1" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
+        <CommandBinding Command="{x:Static local:Gestures.gestSaveAsQuery}" Executed="bSaveQuery_Click" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
+        <CommandBinding Command="{x:Static local:Gestures.gestOpeneQuery}" Executed="bOpenQuery_Click" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
+
+
     </Window.CommandBindings>
 
     <Grid x:Name="MainGrid">
@@ -98,9 +111,10 @@
                                 <TextBox x:Name="userWhere" Margin="0 3" Grid.Column="1"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Row="1" Text="Limit"/>
                                 <TextBox x:Name="userLimit" PreviewTextInput="PreviewTextInput" Margin="0 3" Grid.Column="1" Grid.Row="1"/>
-                                <Button x:Name="ManagebtnRefresh"  Margin="4 2" Grid.Column="2" Content="Refresh" Click="RefreshReadData_Click" />
-                                <Button x:Name="PropertiesManageData" Padding="3 0"  Margin="4 2" Click="PropertiesManageData_Click" 
-                                        Grid.Column="2" Grid.Row="1" Content="Tab. Properties" />
+                                <Button  x:Name="ManagebtnRefresh"  Margin="4 2" Grid.Column="2" Content="Refresh" 
+                                         ToolTip="(Ctrl+R) Refresh the Output grid" Click="RefreshReadData_Click" />
+                                <Button x:Name="PropertiesManageData" Padding="3 0"  Margin="4 2" ToolTip="(Ctrl+P) Display in the grid the table's properties (Mysql DESC analog)"
+                                        Click="PropertiesManageData_Click" Grid.Column="2" Grid.Row="1" Content="Tab. Properties" />
                             </Grid>
                         </Grid>
                     </GroupBox>
@@ -114,7 +128,8 @@
 
                         </Grid.ColumnDefinitions>
 
-                        <Button IsEnabled="False" x:Name="ApplyChangesManageData" Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3" Content="Apply changes"/>
+                        <Button IsEnabled="False" x:Name="ApplyChangesManageData" Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3"
+                                Content="Apply changes" ToolTip="(Ctrl+Enter) Apply the changes done in the 'Output' Grid" />
                         <CheckBox Grid.Column="1" Checked="checkBox1_CheckedChanged" Unchecked="checkBox1_CheckedChanged" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
                         <Button IsEnabled="False" x:Name="DiscardChangesManageData" Click="DiscardChangesReadData_Click" Grid.Column="1" HorizontalAlignment="Right" Padding = "5 3"  Content="Discard changes" />
                         
@@ -139,20 +154,20 @@
 
                     <GroupBox Grid.Row="0" Header="Querry">
                         <WindowsFormsHost Grid.Row="1">
-                            <wf:RichTextBox x:Name="qInp" AcceptsTab="True" TextChanged="qInp_TextChanged" />
+                            <wf:RichTextBox x:Name="qInp" AcceptsTab="True" TextChanged="qInp_TextChanged" KeyDown="qInp_KeyDown" />
                         </WindowsFormsHost>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="File">
                         <StackPanel>
                             <TextBox x:Name="queryName"/>
                             <StackPanel Orientation="Horizontal" Margin="0 10">
-                                <Button Click="ExecuteQuery" Width="85" Margin="5 0" Content="Execute"/>
-                                <Button Click ="button1_Click_1" Width="85" Margin="5 0" Content="Save"/>
-                                <Button Click="bSaveQuery_Click" Width="85" Margin="5 0" Content="Save as"/>
+                                <Button Click="ExecuteQuery" Width="85" Margin="5 0" Content="Execute" ToolTip="(F5) Execute the query"/>
+                                <Button Click ="button1_Click_1" Width="85" Margin="5 0" Content="Save" ToolTip="(Ctrl+S) Save .sql script"/>
+                                <Button Click="bSaveQuery_Click" Width="85" Margin="5 0" Content="Save as" ToolTip="(Ctrl+Shift+S) Save as .sql script" />
                             </StackPanel>
                             <StackPanel Margin="0 0 0 10" Orientation="Horizontal">
-                                <Button Width="85" Margin="5 0" Click="bOpenQuery_Click" Content="Open Querry"/>
-                                <Button Width="85" Margin="5 0" Click="buttonNewQuery" Content="New Querry"/>
+                                <Button Width="85" Margin="5 0" Click="bOpenQuery_Click" Content="Open Querry" ToolTip="(Ctrl+O) Open a .sql script" />
+                                <Button Width="85" Margin="5 0" Click="buttonNewQuery" Content="New Querry" ToolTip="(Ctrl+N) Create new .sql script" />
                                 <Button Width="85" Margin="5 0" Click="EveClearOutput" Content="Clear Output"/>
                                 <CheckBox IsChecked="True" x:Name="checkAutoselect" Content="Auto refresh" />
                             </StackPanel>
