@@ -171,7 +171,7 @@ namespace UDBM
 
             tPropName.Text = "";
 
-            userLimit.Text = "";
+            userLimit.Text = "250";
             userWhere.Text = "";
 
             dispDatabase.Text = "";
@@ -369,7 +369,8 @@ namespace UDBM
                 /*TreeNode[] nodes = new TreeNode[1];
                 nodes[0] = new TreeNode(actualTable);
                 TreeNode parent = new TreeNode(actualDatabase, nodes); //setting the parent */
-                userLimit.Text = "";
+                userLimit.Text = "250";
+                userWhere.Text = "";
 
                 this.SelectTable(sender, true, userWhere.Text);
 
@@ -412,7 +413,7 @@ namespace UDBM
                 actualDatabase = (string)newParent.Header;
                 actualTable = header;
 
-                userLimit.Text = "";
+                userLimit.Text = "250";
                 userWhere.Text = "";
 
                 //this.RenderTableProperties(sender, e.Node);
