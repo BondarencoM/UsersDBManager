@@ -30,6 +30,8 @@ namespace UDBM {
         public MySqlCommandBuilder MySqlcmdBldr;
         public NpgsqlDataAdapter PostGresdataGridAdapterl;
         public NpgsqlCommandBuilder PostGrescmdBldr;
+        public SqlDataAdapter SqlDataGridAdapter;
+        public SqlCommandBuilder SqlCmdBldr;
 
         public DBConnect()
         {
@@ -201,6 +203,12 @@ namespace UDBM {
                         PostGresdataGridAdapterl = new  NpgsqlDataAdapter (sqlCommand, (NpgsqlConnection)((DbConnection)connection));
                         PostGrescmdBldr = new NpgsqlCommandBuilder(PostGresdataGridAdapterl);
                         PostGresdataGridAdapterl.Fill(dataGridSet);
+                        break;
+                    case "sqlserver":
+                        Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
+                        SqlDataGridAdapter = new SqlDataAdapter(sqlCommand, (SqlConnection)((DbConnection)connection));
+                        SqlCmdBldr = new SqlCommandBuilder(SqlDataGridAdapter);
+                        SqlDataGridAdapter.Fill(dataGridSet);
                         break;
                     default: throw new Exception("DBConnect -> GetDataSet -> Switch not implemented dbvar = " + dbVar);
                 } 

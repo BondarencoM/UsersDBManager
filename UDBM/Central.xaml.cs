@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
 
 namespace UDBM
 {
@@ -73,6 +74,11 @@ namespace UDBM
                     db = new DBConnect<NpgsqlConnection, NpgsqlCommand, NpgsqlDataReader>(host, user, pass, "postgres");
                     dbVar = "postgres";
                     break;
+                case "Microsoft SQL Server":
+                    Console.WriteLine("MainForm() switch works at MS SQL Server");
+                    db = new DBConnect<SqlConnection, SqlCommand, SqlDataReader>(host, user, pass, "sqlserver");
+                    dbVar = "sqlserver";
+                    break;
                 default:
                     MessageBox.Show("Main.cs Constructor switch not implemented type = " + type);
                     break;
@@ -105,7 +111,10 @@ namespace UDBM
                     case "postgres":
                         listdb = db.Select("SELECT datname FROM pg_database WHERE datistemplate = false;");
                         Console.WriteLine("ListDatabses: Selected databases for Postgres");
-                        db.Show(listdb.ToArray());
+                        break;
+                    case "sqlserver":
+                        listdb = db.Select("select name from sys.databases;");
+                        Console.WriteLine("ListDatabses: Selected databases for MS SQL Server");
                         break;
                     default:
                         listdb = null;
@@ -130,6 +139,10 @@ namespace UDBM
                             db.usedb(dbname);
                             listtb = db.Select("SELECT tablename FROM pg_catalog.pg_tables where schemaname='public'");
                             Console.WriteLine(db.connection.Database);
+                            break;
+                        case "sqlserver":
+                            db.usedb(dbname);
+                            listtb = db.Select($"SELECT TABLE_NAME FROM {dbname}.INFORMATION_SCHEMA.TABLES WHERE  TABLE_SCHEMA = 'dbo' and TABLE_TYPE = 'BASE TABLE'");
                             break;
                         default:
                             MessageBox.Show(db.dbVar + " database switch not implemented at  private void ListDatabases(DBConnect db)");
@@ -186,7 +199,7 @@ namespace UDBM
 
         }
 
-        public void SelectTable(object sender, bool doRefresh = false, string condition = "true")
+        public void SelectTable(object sender, bool doRefresh = false, string condition = "")
         {
             /*  if (treeViewDatabases.SelectedItem == null || 
                  (TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent != selectedNode.Parent ||
@@ -206,20 +219,27 @@ namespace UDBM
             else sqlSelectCols = "*";
             Console.WriteLine("ListDatabases -> Selection: " + sqlSelectCols);
 
-            if (String.IsNullOrWhiteSpace(condition)) condition = "true";
+            if (!String.IsNullOrWhiteSpace(condition)) condition = "Where " + condition + " ";
 
             string limit = "";
-            if (!String.IsNullOrWhiteSpace(userLimit.Text)) limit = " LIMIT " + userLimit.Text;
+            if (!String.IsNullOrWhiteSpace(userLimit.Text)) limit = "LIMIT " + userLimit.Text;
 
             string query;
 
             switch (dbVar)
             {
                 case "mysql":
-                    query = "Select " + sqlSelectCols + " from " + dbname + "." + tbname + " where " + condition + limit + " ;";
+                    query = $"Select {sqlSelectCols} from {dbname}.{tbname} {condition} {limit} ;";
                     break;
                 case "postgres":
-                    query = "Select " + sqlSelectCols + " from " + tbname + " where " + condition + limit + " ;";
+                    query = $"Select {sqlSelectCols} from {tbname} {condition} {limit} ;";
+                    break;
+                case "sqlserver":
+                    db.usedb(dbname);
+                    limit = "";
+                    if (!String.IsNullOrWhiteSpace(userLimit.Text))
+                        limit = $"TOP({userLimit.Text})";
+                    query = $"Select {limit} {sqlSelectCols} from {tbname} {condition} ;"; 
                     break;
                 default:
                     MessageBox.Show("ListDatabases -> Switch not implemented at SelectTable dbVar = " + dbVar);
@@ -303,6 +323,9 @@ namespace UDBM
                     case "postgres":
                         db.PostGresdataGridAdapterl.Update(data);
                         break;
+                    case "sqlserver":
+                        db.SqlDataGridAdapter.Update(data);
+                        break;
                     default:
                         throw new Exception("Switch not implemented at void updateDbFromDataGrid(DataSet data) dbVar = " + dbVar);
                 }
@@ -358,8 +381,14 @@ namespace UDBM
                     case "postgres":
                         actualTable = "INFORMATION_SCHEMA.columns";
                         actualDatabase = (string)parentItem.Header;
-                        userWhere.Text = $"table_name = '{(string)selectedItem.Header}';";
+                        userWhere.Text = $" table_name = '{(string)selectedItem.Header}';";
                         toCheck = new int[] { 3, 5, 6, 7, 10, 43 };
+                        break;
+                    case "sqlserver":
+                        actualTable = "INFORMATION_SCHEMA.columns";
+                        actualDatabase = (string)parentItem.Header;
+                        userWhere.Text = $" table_catalog = '{(string)parentItem.Header}' and table_name = '{(string)selectedItem.Header}';";
+                        toCheck = new int[] { 3, 5, 6, 7, 10 };
                         break;
                     default:
                         throw new Exception("Switch not implemented at PropertiesManageData_Click ");
@@ -814,7 +843,9 @@ namespace UDBM
 
 /*
 To do:
- * Shortcuts
+ * Rename only working for the last db
+ * BUG: Where doe not set automatically for tab properties
+ * sortarea
  * Default limit
  * After tabel properties "where" field doesn't clear
  * Mai multe baze de date
