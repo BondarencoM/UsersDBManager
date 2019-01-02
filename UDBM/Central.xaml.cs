@@ -644,6 +644,7 @@ namespace UDBM
 
             try
             {
+                db.usedb(actualDatabase);
                 List<List<string>> rez = db.Select("ALTER TABLE " + selecteTable + " RENAME TO " + tPropName.Text);
                 this.RefreshDatabasesTree();
 
@@ -846,7 +847,7 @@ namespace UDBM
 
 /*
 To do:
- * Rename only working for the last db
+ * actual db vs display db
  * sortarea
  * Default limit
  * After tabel properties "where" field doesn't clear
