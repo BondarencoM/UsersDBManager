@@ -364,6 +364,9 @@ namespace UDBM
                 checkedListBox.Items.Clear();
 
                 this.SelectTable(sender, true);
+
+                userWhere.Text = "";
+
                 refreshDisplayDbTb();
                 PropertiesManageData.Content = "Tab. Properties";
             }
@@ -375,7 +378,7 @@ namespace UDBM
                     case "mysql":
                         actualTable = "columns";
                         actualDatabase = "INFORMATION_SCHEMA";
-                        userWhere.Text = $"table_name = '{(string)selectedItem.Header}' and table_schema='{(string)parentItem.Header}';";
+                        userWhere.Text = $"table_name = '{(string)selectedItem.Header}' and table_schema='{(string)parentItem.Header}'";
                         toCheck = new int[] { 3, 5, 6, 8, 9, 16, 18 };
                         break;
                     case "postgres":
@@ -399,7 +402,7 @@ namespace UDBM
                 nodes[0] = new TreeNode(actualTable);
                 TreeNode parent = new TreeNode(actualDatabase, nodes); //setting the parent */
                 userLimit.Text = "250";
-                userWhere.Text = "";
+                
 
                 this.SelectTable(sender, true, userWhere.Text);
 
@@ -844,7 +847,6 @@ namespace UDBM
 /*
 To do:
  * Rename only working for the last db
- * BUG: Where doe not set automatically for tab properties
  * sortarea
  * Default limit
  * After tabel properties "where" field doesn't clear

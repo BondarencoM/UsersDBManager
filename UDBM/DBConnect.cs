@@ -160,7 +160,8 @@ namespace UDBM {
             else
                 return list;
         }
-                public void Show(List<string>[] toshow)
+
+        public void Show(List<string>[] toshow)
         {
             foreach (List<string> list in toshow)
             {
@@ -169,7 +170,6 @@ namespace UDBM {
                     Console.WriteLine(s);
             }
         }
-
 
         public void usedb(string dbname)
         {
@@ -182,7 +182,6 @@ namespace UDBM {
             connection = new dbCon();
             connection.ConnectionString = connectionString;
         }
-
 
         public DataTable GetDataSet(string sqlCommand, string tbname="")
         {
