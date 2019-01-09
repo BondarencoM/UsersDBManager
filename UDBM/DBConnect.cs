@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
 using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 
 namespace UDBM { 
   
@@ -32,6 +33,9 @@ namespace UDBM {
         public NpgsqlCommandBuilder PostGrescmdBldr;
         public SqlDataAdapter SqlDataGridAdapter;
         public SqlCommandBuilder SqlCmdBldr;
+        public OracleDataAdapter OracleDataGridAdapter;
+        public OracleCommandBuilder OracleCmdBldr;
+
 
         public DBConnect()
         {
@@ -209,6 +213,7 @@ namespace UDBM {
                         SqlCmdBldr = new SqlCommandBuilder(SqlDataGridAdapter);
                         SqlDataGridAdapter.Fill(dataGridSet);
                         break;
+
                     default: throw new Exception("DBConnect -> GetDataSet -> Switch not implemented dbvar = " + dbVar);
                 } 
             }

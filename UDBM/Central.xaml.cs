@@ -853,10 +853,9 @@ To do:
  * After tabel properties "where" field doesn't clear
  * Mai multe baze de date
  *  Oracle
- *  MS Server
  * Lucru cu scheme
- * De permis de introdus orice querry in Manage data
- * Careva probleme cu auto apply
+ * De permis de introdus orice querry in Manage data (sau tab plain, tab grid la execute querry)
+ * Fix auto apply
  * rename pentru Postgre
  * Create another one z-index la fora de logare
  * refactoring la denmiri
