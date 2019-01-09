@@ -66,17 +66,17 @@ namespace UDBM
             {
                 case "MySQL":
                     Console.WriteLine("MainForm() switch works at MySQL");
-                    db = new DBConnect<MySqlConnection, MySqlCommand, MySqlDataReader>(host, user, pass, "mysql");
+                    db = new DBConnect<MySqlConnection, MySqlCommand, MySqlDataReader,MySqlDataAdapter,MySqlCommandBuilder>(host, user, pass, "mysql");
                     dbVar = "mysql";
                     break;
                 case "PostgreSQL":
                     Console.WriteLine("MainForm() switch works at PostgeSQL");
-                    db = new DBConnect<NpgsqlConnection, NpgsqlCommand, NpgsqlDataReader>(host, user, pass, "postgres");
+                    db = new DBConnect<NpgsqlConnection, NpgsqlCommand, NpgsqlDataReader,NpgsqlDataAdapter,NpgsqlCommandBuilder>(host, user, pass, "postgres");
                     dbVar = "postgres";
                     break;
                 case "Microsoft SQL Server":
                     Console.WriteLine("MainForm() switch works at MS SQL Server");
-                    db = new DBConnect<SqlConnection, SqlCommand, SqlDataReader>(host, user, pass, "sqlserver");
+                    db = new DBConnect<SqlConnection, SqlCommand, SqlDataReader,SqlDataAdapter,SqlCommandBuilder>(host, user, pass, "sqlserver");
                     dbVar = "sqlserver";
                     break;
                 default:
@@ -315,20 +315,7 @@ namespace UDBM
         {
             try
             {
-                switch (dbVar)
-                {
-                    case "mysql":
-                        db.MySqldataGridAdaptaer.Update(data);
-                        break;
-                    case "postgres":
-                        db.PostGresdataGridAdapterl.Update(data);
-                        break;
-                    case "sqlserver":
-                        db.SqlDataGridAdapter.Update(data);
-                        break;
-                    default:
-                        throw new Exception("Switch not implemented at void updateDbFromDataGrid(DataSet data) dbVar = " + dbVar);
-                }
+                db.DataGridAdapter.Update(data);
             }
             catch (Exception ex)
             {

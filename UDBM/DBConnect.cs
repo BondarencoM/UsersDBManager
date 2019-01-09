@@ -14,10 +14,12 @@ using Oracle.ManagedDataAccess.Client;
 namespace UDBM { 
   
 
-    class DBConnect<dbCon,dbCmd,dbReader>
+    class DBConnect<dbCon,dbCmd,dbReader,dbAdapter,dbCmdBld>
         where dbCon : DbConnection, new()
         where dbCmd : DbCommand,new()
         where dbReader : DbDataReader
+        where dbAdapter : DbDataAdapter,new()
+        where dbCmdBld : DbCommandBuilder, new()
     {
         public dbCon connection;
         public string server;
@@ -27,15 +29,8 @@ namespace UDBM {
         public string dbVar;
 
         public DataTable dataGridSet;
-        public MySqlDataAdapter MySqldataGridAdaptaer;
-        public MySqlCommandBuilder MySqlcmdBldr;
-        public NpgsqlDataAdapter PostGresdataGridAdapterl;
-        public NpgsqlCommandBuilder PostGrescmdBldr;
-        public SqlDataAdapter SqlDataGridAdapter;
-        public SqlCommandBuilder SqlCmdBldr;
-        public OracleDataAdapter OracleDataGridAdapter;
-        public OracleCommandBuilder OracleCmdBldr;
-
+        public dbAdapter DataGridAdapter;
+        public dbCmdBld CommandBuilder;
 
         public DBConnect()
         {
@@ -88,25 +83,9 @@ namespace UDBM {
                 connection.Open();
                 return true;
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
-                switch (ex.Number)
-                {
-                    case 0:
-
-                        MessageBox.Show("Cannot connect to server.  Contact administrator \n Error code 0", "UDBM: Error");
-                        break;
-                    case 1045:
-                        MessageBox.Show("Invalid username/password, please try again \n Error code 1045", "UDBM: Error");
-                        break;
-                    case 1042:
-                        MessageBox.Show("Unable to connect to the indicated host \n Error code 1042", "UDBM: Error");
-                        break;
-                    default:
-                        MessageBox.Show(ex.Message + "\n Error code", "UDBM: Error");
-                        break;
-
-                }
+                MessageBox.Show(ex.Message + "\n Error code", "UDBM: Error");
                 return false;
             }
         }
@@ -135,7 +114,6 @@ namespace UDBM {
                 dbCmd cmd = new dbCmd();
                 cmd.Connection = connection;
                 cmd.CommandText = query;
-                
                 
                 try
                 {
@@ -193,29 +171,19 @@ namespace UDBM {
             dataGridSet = new DataTable();
             try
             {
-                switch (dbVar)
-                {
-                    case "mysql":
-                        Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
-                        MySqldataGridAdaptaer = new MySqlDataAdapter(sqlCommand, (MySqlConnection)((DbConnection)connection));
-                        MySqlcmdBldr = new MySqlCommandBuilder(MySqldataGridAdaptaer);
-                        MySqldataGridAdaptaer.Fill(dataGridSet);
-                        break;
-                    case "postgres":
-                        Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
-                        PostGresdataGridAdapterl = new  NpgsqlDataAdapter (sqlCommand, (NpgsqlConnection)((DbConnection)connection));
-                        PostGrescmdBldr = new NpgsqlCommandBuilder(PostGresdataGridAdapterl);
-                        PostGresdataGridAdapterl.Fill(dataGridSet);
-                        break;
-                    case "sqlserver":
-                        Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
-                        SqlDataGridAdapter = new SqlDataAdapter(sqlCommand, (SqlConnection)((DbConnection)connection));
-                        SqlCmdBldr = new SqlCommandBuilder(SqlDataGridAdapter);
-                        SqlDataGridAdapter.Fill(dataGridSet);
-                        break;
+                Console.WriteLine("DBC: GetDataSet: Executing: " + sqlCommand);
 
-                    default: throw new Exception("DBConnect -> GetDataSet -> Switch not implemented dbvar = " + dbVar);
-                } 
+                DataGridAdapter = new dbAdapter();
+                dbCmd cmdToExec = new dbCmd()
+                {
+                    Connection = connection,
+                    CommandText = sqlCommand
+                };
+                DataGridAdapter.SelectCommand = cmdToExec;
+                DataGridAdapter.Fill(dataGridSet);
+                CommandBuilder = new dbCmdBld();
+                CommandBuilder.DataAdapter = DataGridAdapter;
+
             }
            catch(Exception e){
                MessageBox.Show(e.Message, "UDBM: Error");
