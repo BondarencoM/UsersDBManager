@@ -37,6 +37,7 @@
                 <ComboBoxItem Content="MySQL"/>
                 <ComboBoxItem Content="PostgreSQL"/>
                 <ComboBoxItem Content="Microsoft SQL Server"/>
+                <ComboBoxItem Content="Oracle" />
             </ComboBox>
             
             <Grid Margin="0 5">

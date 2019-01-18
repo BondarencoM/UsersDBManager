@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
+using Oracle.ManagedDataAccess.Client;
 
 namespace UDBM
 {
@@ -60,25 +61,27 @@ namespace UDBM
             { CheckFileExists=true, Filter = "Sql file (*.sql)|*.sql|Text File (*.txt)|*.txt|All files (*.*)|*.*" };
 
             highlightTimer = new System.Windows.Forms.Timer();
-            highlightTimer.Tick += highlightTimer_Tick;      
-
+            highlightTimer.Tick += highlightTimer_Tick;
+            Console.WriteLine("MainForm() switch works at " + type);
             switch (type)
             {
                 case "MySQL":
-                    Console.WriteLine("MainForm() switch works at MySQL");
                     db = new DBConnect<MySqlConnection, MySqlCommand, MySqlDataReader,MySqlDataAdapter,MySqlCommandBuilder>(host, user, pass, "mysql");
                     dbVar = "mysql";
                     break;
                 case "PostgreSQL":
-                    Console.WriteLine("MainForm() switch works at PostgeSQL");
                     db = new DBConnect<NpgsqlConnection, NpgsqlCommand, NpgsqlDataReader,NpgsqlDataAdapter,NpgsqlCommandBuilder>(host, user, pass, "postgres");
                     dbVar = "postgres";
                     break;
                 case "Microsoft SQL Server":
-                    Console.WriteLine("MainForm() switch works at MS SQL Server");
                     db = new DBConnect<SqlConnection, SqlCommand, SqlDataReader,SqlDataAdapter,SqlCommandBuilder>(host, user, pass, "sqlserver");
                     dbVar = "sqlserver";
                     break;
+                case "Oracle":
+                    db = new DBConnect<OracleConnection, OracleCommand, OracleDataReader, OracleDataAdapter, OracleCommandBuilder>(host, user, pass, "oracle");
+                    dbVar = "oracle";
+                    break;
+
                 default:
                     MessageBox.Show("Main.cs Constructor switch not implemented type = " + type);
                     break;
@@ -116,6 +119,9 @@ namespace UDBM
                         listdb = db.Select("select name from sys.databases;");
                         Console.WriteLine("ListDatabses: Selected databases for MS SQL Server");
                         break;
+                    case "oracle":
+                        listdb = db.Select("SELECT TABLESPACE_NAME FROM USER_TABLESPACES");
+                        break;
                     default:
                         listdb = null;
                         MessageBox.Show(db.dbVar + " database switch not implemented at private void ListDatabases()");
@@ -143,6 +149,9 @@ namespace UDBM
                         case "sqlserver":
                             db.usedb(dbname);
                             listtb = db.Select($"SELECT TABLE_NAME FROM {dbname}.INFORMATION_SCHEMA.TABLES WHERE  TABLE_SCHEMA = 'dbo' and TABLE_TYPE = 'BASE TABLE'");
+                            break;
+                        case "oracle":
+                            listtb = db.Select($"SELECT table_name FROM dba_tables where TABLESPACE_NAME = '{dbname}'");
                             break;
                         default:
                             MessageBox.Show(db.dbVar + " database switch not implemented at  private void ListDatabases(DBConnect db)");
@@ -241,6 +250,12 @@ namespace UDBM
                         limit = $"TOP({userLimit.Text})";
                     query = $"Select {limit} {sqlSelectCols} from {tbname} {condition} ;"; 
                     break;
+                case "oracle":
+                    limit = "";
+                    if (!String.IsNullOrWhiteSpace(userLimit.Text))
+                        limit = $"FETCH FIRST {userLimit.Text} ROWS ONLY";
+                    query = $"Select {sqlSelectCols} from {tbname} {condition} {limit}";
+                    break;
                 default:
                     MessageBox.Show("ListDatabases -> Switch not implemented at SelectTable dbVar = " + dbVar);
                     throw new Exception("Switch not implemented at Main.cs SelectTable");
@@ -249,10 +264,11 @@ namespace UDBM
             DataTable tableData = db.GetDataSet(query, tbname);
             if (tableData != null)
             {
+                tableData.TableName = tbname;   
                 ManageDataGrid.DataContext = tableData;
                 ManageDataSet = tableData;
 
-                //tableData.
+                Console.WriteLine("Select table: Selected table name " + tableData.TableName);
             }
 
 
@@ -379,6 +395,12 @@ namespace UDBM
                         actualDatabase = (string)parentItem.Header;
                         userWhere.Text = $" table_catalog = '{(string)parentItem.Header}' and table_name = '{(string)selectedItem.Header}';";
                         toCheck = new int[] { 3, 5, 6, 7, 10 };
+                        break;
+                    case "oracle":
+                        actualTable = "USER_TAB_COLUMNS";
+                        actualDatabase = (string)parentItem.Header;
+                        userWhere.Text = $"table_name = '{(string)selectedItem.Header}'";
+                        toCheck = new int[] { 1, 2, 5, 6, 7, 10 };
                         break;
                     default:
                         throw new Exception("Switch not implemented at PropertiesManageData_Click ");
@@ -783,8 +805,6 @@ namespace UDBM
             eveGoToTab(2);
         }
 
-
-
         #endregion
 
     }
@@ -828,7 +848,6 @@ namespace UDBM
             //other
             
                 }
-
     }
 }
 

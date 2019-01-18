@@ -4,12 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using MySql.Data.MySqlClient;
-using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
-using Npgsql;
-using Oracle.ManagedDataAccess.Client;
 
 namespace UDBM { 
   
@@ -66,14 +62,23 @@ namespace UDBM {
             server = pserver;
             uid = puser;
             password = ppass;
-            string connectionString;
-            connectionString = "Server=" + server + ";" + "User Id="
-            + uid + ";" + "Password=" + password + ";";
+            string connectionString="";
 
-            if (dbVar == "postgres") connectionString += "Database = postgres;";
+            if (dbVar == "oracle")
+            {
+                connectionString += $"Data Source=(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = {server})(PORT = 1521))(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = ORCL))); ";
+            }
+            else
+                connectionString += "Server=" + server + ";";
+            connectionString += "User Id=" + uid + ";";
+            connectionString += "Password=" + password + ";";
+            if (dbVar == "postgres")
+                connectionString += "Database = postgres;";
 
             connection = new dbCon();
             connection.ConnectionString = connectionString;
+            
+            
         }
 
         private bool OpenConnection()
@@ -117,8 +122,7 @@ namespace UDBM {
                 
                 try
                 {
-                    dbReader dataReader = (dbReader)cmd.ExecuteReader();
-               
+                    dbReader dataReader = (dbReader)cmd.ExecuteReader();   
                 while (dataReader.Read())
                 {
                     list.Add( new List<string>());
