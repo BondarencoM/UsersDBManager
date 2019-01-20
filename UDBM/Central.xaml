@@ -45,7 +45,7 @@
                 <MenuItem Height="20" Header="_Log out" Click="logOutToolStripMenuItem_Click" />
                 <MenuItem Height="20" Header="_Exit application" Click="SelectDatabaseForm_FormClosed"/>
             </MenuItem>
-
+            <MenuItem Header="Preferences" Click="OpenPreferences" />
             <TextBlock Text="Database:"/>
             <TextBlock x:Name="dispDatabase" />
             <TextBlock Text="Table:"/>

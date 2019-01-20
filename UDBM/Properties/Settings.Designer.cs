@@ -25,7 +25,7 @@ namespace UDBM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string lgHost {
             get {
                 return ((string)(this["lgHost"]));
@@ -56,6 +56,66 @@ namespace UDBM.Properties {
             }
             set {
                 this["lgDbType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int prLimit {
+            get {
+                return ((int)(this["prLimit"]));
+            }
+            set {
+                this["prLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool prAutoApply {
+            get {
+                return ((bool)(this["prAutoApply"]));
+            }
+            set {
+                this["prAutoApply"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int prFitMethod {
+            get {
+                return ((int)(this["prFitMethod"]));
+            }
+            set {
+                this["prFitMethod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string prWorkspace {
+            get {
+                return ((string)(this["prWorkspace"]));
+            }
+            set {
+                this["prWorkspace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool prAutoRefresh {
+            get {
+                return ((bool)(this["prAutoRefresh"]));
+            }
+            set {
+                this["prAutoRefresh"] = value;
             }
         }
     }

@@ -284,7 +284,7 @@ namespace UDBM
             {
                 column.Width = new DataGridLength(1.0, DataGridLengthUnitType.Auto);
             }
-
+            
 
             /* if ( ManageDataGrid.Columns.Count!=0 && ((string)ManageDataGrid.Columns[0].Header).ToLower() == "id")
                  ManageDataGrid.Columns[0].Width = 50;*/
@@ -793,6 +793,12 @@ namespace UDBM
             else if (e.KeyCode == System.Windows.Forms.Keys.O && e.Control == true)
                 bOpenQuery_Click(sender, null);
 
+        }
+
+        private void OpenPreferences(object sender, RoutedEventArgs e)
+        {
+            Preferences p = new Preferences();
+            p.ShowDialog();
         }
 
         public void eveGoToTab2(object sender, RoutedEventArgs e)

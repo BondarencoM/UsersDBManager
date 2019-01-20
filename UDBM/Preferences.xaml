@@ -1,0 +1,121 @@
+﻿<Window x:Class="UDBM.Preferences"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UDBM"
+        mc:Ignorable="d"
+        Title="UDBM: Preferences" Height="400" Width="400"
+        Loaded="Window_Loaded">
+    <StackPanel Margin="5 0">
+        <TextBlock Margin="5 0" FontSize="0.75cm" Text="Prefrences" />
+        <!--Manage Data-->
+        <GroupBox>
+            <GroupBox.Header>
+                <TextBlock Text="Manage Data"/>
+            </GroupBox.Header>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--Default Limit-->
+            <TextBlock Grid.Column="1" Text="Default Limit" />
+            <TextBox x:Name="inLimit" Grid.Column="3"/>
+            <!--Datagrid Autoapply-->
+            <TextBlock VerticalAlignment="Center"  Text="Auto-apply changes" Grid.Column="1" Grid.Row="1"  />
+            <CheckBox x:Name="inAutoApply"  Margin="0 3" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" />
+            <!--Datagrid Fit-->
+            <TextBlock VerticalAlignment="Center" Text="Datagrid Fit method" Grid.Column="1" Grid.Row="2"  />
+            <ComboBox x:Name="inFitMethod" Grid.Column="3" Grid.Row="2">
+                    <ComboBoxItem Content="Size to cells and headers"/>
+                    <ComboBoxItem Content="Size to headers"/>
+                    <ComboBoxItem Content="Size to cells"/>
+            </ComboBox>
+            </Grid>
+        </GroupBox>
+        <!--Execute querry-->
+        <GroupBox Margin=" 0 10">
+            <GroupBox.Header>
+                <TextBlock Text="Execute querry"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--Default workspace-->
+                <TextBlock Grid.Column="1" Text="Default workspace" />
+                <TextBox x:Name="inWorkspace" Grid.Column="3"/>
+                <!--Datagrid Autoapply-->
+                <TextBlock VerticalAlignment="Center"  Text="Auto-refresh default" Grid.Column="1" Grid.Row="1"  />
+                <CheckBox x:Name="inAutoRefresh" Margin="0 3" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" />
+            </Grid>
+        </GroupBox>
+        <!--Credentials-->
+        <GroupBox>
+            <GroupBox.Header>
+                <TextBlock Text="Credentials"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--Server-->
+                <TextBlock Grid.Column="1" Text="Server" />
+                <TextBox x:Name="inServer" Grid.Column="3"/>
+                <!--Username-->
+                <TextBlock VerticalAlignment="Center" Text="Username" Grid.Column="1" Grid.Row="1"  />
+                <TextBox x:Name="inUsername" Grid.Row="1" Grid.Column="3" Margin="0 3" VerticalAlignment="Center" />
+                <!--Database Type-->
+                <TextBlock VerticalAlignment="Center" Text="Database type" Grid.Column="1" Grid.Row="2"  />
+                <ComboBox x:Name="inDbType" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center">
+                    <ComboBoxItem Content="MySQL"/>
+                    <ComboBoxItem Content="PostgreSQL"/>
+                    <ComboBoxItem Content="Microsoft SQL Server"/>
+                    <ComboBoxItem Content="Oracle" />
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <!--Buttons-->
+        <Grid Margin="0 10 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                
+            </Grid.ColumnDefinitions>
+            <Button IsDefault="True" Click="OkBtnClick" Grid.Column="1" Margin="0 0 15 0" Content="Ok" />
+            <Button Click="ApplyBtnClick" Grid.Column="2" Margin="0 0 15 0"  Content="Apply" />
+            <Button Click="Window_Loaded" Grid.Column="3" Margin="0 0 15 0" Content="Discard" />
+            <Button IsCancel="True" Click="CloseBtnClick" Grid.Column="4" Margin="0 0 15 0" Content="Close" />
+        </Grid>
+    </StackPanel>
+</Window>
