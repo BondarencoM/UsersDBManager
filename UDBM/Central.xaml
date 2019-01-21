@@ -24,8 +24,8 @@
         <CommandBinding Command="{x:Static local:Gestures.gestSaveQuery}" Executed="button1_Click_1" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
         <CommandBinding Command="{x:Static local:Gestures.gestSaveAsQuery}" Executed="bSaveQuery_Click" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
         <CommandBinding Command="{x:Static local:Gestures.gestOpeneQuery}" Executed="bOpenQuery_Click" CanExecute="ExecuteQuery_CommandBinding_CanExecute" />
-
-
+        <!--Others -->
+        <CommandBinding Command="{x:Static local:Gestures.gestPrefs}" Executed="OpenPreferences" CanExecute="CommandBinding_CanExecute_True" />
     </Window.CommandBindings>
 
     <Grid x:Name="MainGrid">

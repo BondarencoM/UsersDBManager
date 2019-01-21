@@ -315,6 +315,12 @@ namespace UDBM
             dispTable.Text = actualTable;
         }
 
+        private void OpenPreferences(object sender, RoutedEventArgs e)
+        {
+            Preferences p = new Preferences();
+            p.ShowDialog();
+        }
+
         #endregion
 
         #region Manage Data
@@ -792,13 +798,9 @@ namespace UDBM
                 bSaveQuery_Click(sender, null);
             else if (e.KeyCode == System.Windows.Forms.Keys.O && e.Control == true)
                 bOpenQuery_Click(sender, null);
+            else if (e.KeyCode == System.Windows.Forms.Keys.Oemcomma && e.Control == true)
+                OpenPreferences(sender, null);
 
-        }
-
-        private void OpenPreferences(object sender, RoutedEventArgs e)
-        {
-            Preferences p = new Preferences();
-            p.ShowDialog();
         }
 
         public void eveGoToTab2(object sender, RoutedEventArgs e)
@@ -831,7 +833,7 @@ namespace UDBM
         public static RoutedCommand gestSaveAsQuery = new RoutedCommand();
         public static RoutedCommand gestOpeneQuery = new RoutedCommand();
         //other
-        //public static RoutedCommand gestPrefs = new RoutedCommand();
+        public static RoutedCommand gestPrefs = new RoutedCommand();
         public static void Load()
         {
             //tabs
@@ -852,8 +854,8 @@ namespace UDBM
             gestSaveAsQuery.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift));
             gestOpeneQuery.InputGestures.Add(new KeyGesture(Key.O, ModifierKeys.Control));
             //other
-            
-                }
+            gestPrefs.InputGestures.Add(new KeyGesture(Key.OemComma, ModifierKeys.Control));
+        }
     }
 }
 
