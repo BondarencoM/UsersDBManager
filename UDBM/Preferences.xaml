@@ -8,7 +8,7 @@
         Title="UDBM: Preferences" Height="400" Width="400"
         Loaded="Window_Loaded">
     <StackPanel Margin="5 0">
-        <TextBlock Margin="5 0" FontSize="0.75cm" Text="Prefrences" />
+        <TextBlock Margin="5 0" FontSize="0.75cm" Text="Preferences" />
         <!--Manage Data-->
         <GroupBox>
             <GroupBox.Header>

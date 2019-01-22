@@ -131,7 +131,7 @@
 
                         <Button IsEnabled="False" x:Name="ApplyChangesManageData" Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3"
                                 Content="Apply changes" ToolTip="(Ctrl+Enter) Apply the changes done in the 'Output' Grid" />
-                        <CheckBox Grid.Column="1" Checked="checkBox1_CheckedChanged" Unchecked="checkBox1_CheckedChanged" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
+                        <CheckBox x:Name="cbAutoApply" Grid.Column="1" Checked="checkBox1_CheckedChanged" Unchecked="checkBox1_CheckedChanged" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
                         <Button IsEnabled="False" x:Name="DiscardChangesManageData" Click="DiscardChangesReadData_Click" Grid.Column="1" HorizontalAlignment="Right" Padding = "5 3"  Content="Discard changes" />
                         
                     </Grid>

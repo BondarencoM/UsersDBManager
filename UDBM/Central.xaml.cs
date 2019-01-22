@@ -34,6 +34,7 @@ namespace UDBM
         System.Windows.Forms.SaveFileDialog saveFileDialog1;
         System.Windows.Forms.Timer highlightTimer;
         System.Windows.Forms.OpenFileDialog openFileDialog1;
+        DataGridLengthUnitType dataGridLengthUnit;
 
         public Central()
         {
@@ -96,7 +97,9 @@ namespace UDBM
 
             Console.WriteLine("Main_Load -> Start ListDatabases();");
             ListDatabases();
-            Console.WriteLine("Main_Load -> Databases Listed");
+            Console.WriteLine("Main_Load -> Databases Listed;\n Start loading Preferences");
+            loadPreferences();
+
         }
 
         private void ListDatabases()
@@ -282,7 +285,7 @@ namespace UDBM
 
             foreach (DataGridColumn column in ManageDataGrid.Columns)
             {
-                column.Width = new DataGridLength(1.0, DataGridLengthUnitType.Auto);
+                column.Width = new DataGridLength(1.0, dataGridLengthUnit);
             }
             
 
@@ -321,6 +324,32 @@ namespace UDBM
             p.ShowDialog();
         }
 
+        private void loadPreferences()
+        {
+            userLimit.Text = Properties.Settings.Default.prLimit.ToString();
+            cbAutoApply.IsChecked = Properties.Settings.Default.prAutoApply;
+            checkAutoselect.IsChecked = Properties.Settings.Default.prAutoRefresh;
+            if (Directory.Exists(Properties.Settings.Default.prWorkspace))
+            {
+                openFileDialog1.InitialDirectory = Properties.Settings.Default.prWorkspace;
+                saveFileDialog1.InitialDirectory = Properties.Settings.Default.prWorkspace;
+            }
+                
+
+            switch (Properties.Settings.Default.prFitMethod)
+            {
+                case 0:
+                    dataGridLengthUnit = DataGridLengthUnitType.Auto;
+                    break;
+                case 1:
+                    dataGridLengthUnit = DataGridLengthUnitType.SizeToHeader;
+                    break;
+                case 2:
+                    dataGridLengthUnit = DataGridLengthUnitType.SizeToCells;
+                    break;
+            }
+            
+        }
         #endregion
 
         #region Manage Data
@@ -863,19 +892,12 @@ namespace UDBM
 To do:
  * actual db vs display db
  * sortarea
- * Default limit
- * After tabel properties "where" field doesn't clear
- * Mai multe baze de date
- *  Oracle
  * Lucru cu scheme
  * De permis de introdus orice querry in Manage data (sau tab plain, tab grid la execute querry)
  * Fix auto apply
  * rename pentru Postgre
- * Create another one z-index la fora de logare
  * refactoring la denmiri
- * Preferences
-        modul de fit la datagrid
-        default limit
+ * Preferences de adaugat tooltips
  * DB-s expand all
  *
  * 
