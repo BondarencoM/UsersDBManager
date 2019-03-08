@@ -1,17 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDBM", "UDBM\UDBM.csproj", "{C9E2A210-4A49-4704-821A-0BFFC8C653F0}"
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.SystemStyles", "Selen.Wpf.SystemStyles\Selen.Wpf.SystemStyles.csproj", "{A468315F-FA11-4BC2-8E5F-EA3C48B24C74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.SystemStyles", "UDBM\Selen.Wpf\Selen.Wpf.SystemStyles\Selen.Wpf.SystemStyles.csproj", "{A468315F-FA11-4BC2-8E5F-EA3C48B24C74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.Core", "Selen.Wpf.Core\Selen.Wpf.Core.csproj", "{C94C1BDD-11F9-4A3F-8929-86B1B67AE1D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.Core", "UDBM\Selen.Wpf\Selen.Wpf.Core\Selen.Wpf.Core.csproj", "{C94C1BDD-11F9-4A3F-8929-86B1B67AE1D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.DemoApplication", "Selen.Wpf.DemoApplication\Selen.Wpf.DemoApplication.csproj", "{12A9479B-4807-47E2-B685-C5CEE50E5B53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.GenericAppTree", "UDBM\Selen.Wpf\Selen.Wpf.GenericAppTree\Selen.Wpf.GenericAppTree.csproj", "{8615A3C0-298C-4B9D-8FFC-D5ACA466523D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.GenericAppTree", "Selen.Wpf.GenericAppTree\Selen.Wpf.GenericAppTree.csproj", "{8615A3C0-298C-4B9D-8FFC-D5ACA466523D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.GenericAppTree.Contracts", "UDBM\Selen.Wpf\Selen.Wpf.GenericAppTree.Contracts\Selen.Wpf.GenericAppTree.Contracts.csproj", "{FC32AB02-5705-48E0-BCFD-78EB6C137AEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selen.Wpf.GenericAppTree.Contracts", "Selen.Wpf.GenericAppTree.Contracts\Selen.Wpf.GenericAppTree.Contracts.csproj", "{FC32AB02-5705-48E0-BCFD-78EB6C137AEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{16B154A0-4939-4078-B37F-14E88DA6E7B7}"
+	ProjectSection(SolutionItems) = preProject
+		tools\deploy.cmd = tools\deploy.cmd
+		tools\updateLib.cmd = tools\updateLib.cmd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C9E2A210-4A49-4704-821A-0BFFC8C653F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9E2A210-4A49-4704-821A-0BFFC8C653F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9E2A210-4A49-4704-821A-0BFFC8C653F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9E2A210-4A49-4704-821A-0BFFC8C653F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A468315F-FA11-4BC2-8E5F-EA3C48B24C74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A468315F-FA11-4BC2-8E5F-EA3C48B24C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A468315F-FA11-4BC2-8E5F-EA3C48B24C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,6 +31,10 @@ Global
 		{C94C1BDD-11F9-4A3F-8929-86B1B67AE1D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C94C1BDD-11F9-4A3F-8929-86B1B67AE1D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C94C1BDD-11F9-4A3F-8929-86B1B67AE1D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12A9479B-4807-47E2-B685-C5CEE50E5B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A9479B-4807-47E2-B685-C5CEE50E5B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A9479B-4807-47E2-B685-C5CEE50E5B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A9479B-4807-47E2-B685-C5CEE50E5B53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8615A3C0-298C-4B9D-8FFC-D5ACA466523D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8615A3C0-298C-4B9D-8FFC-D5ACA466523D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8615A3C0-298C-4B9D-8FFC-D5ACA466523D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,8 +46,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {725BD4CE-8428-4855-A9A2-CFCC35D09883}
 	EndGlobalSection
 EndGlobal

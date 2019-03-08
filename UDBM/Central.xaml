@@ -7,8 +7,9 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d" 
         Loaded="Main_Load" Unloaded="Window_Unloaded"
-        Title="Central" Height="450" Width="600"
-        StateChanged="Window_StateChanged">
+        Title="Central" Height="450" Width="650"
+        StateChanged="Window_StateChanged"
+        Background="{StaticResource ResourceKey=Background}">
     <Window.CommandBindings>
         <!--Tabs -->
         <CommandBinding Command="{x:Static local:Gestures.gestGoToTab1}" Executed="eveGoToTab1" CanExecute="CommandBinding_CanExecute_True" />
@@ -34,10 +35,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition MinWidth="175" Width="4*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Menu Grid.ColumnSpan="3">
             <MenuItem Height="20" Header="_Connection">
                 <MenuItem Height="20" Header="_Refresh" Click="refreshToolStripMenuItem_Click"/>
@@ -52,15 +53,16 @@
             <TextBlock x:Name="dispTable" />
         </Menu>
         <GridSplitter IsMouseCaptureWithinChanged="GridSplitter_IsMouseCaptureWithinChanged" Width="4" 
-                       HorizontalAlignment="Right" Grid.Row="1"  Grid.RowSpan="10" />
+                       HorizontalAlignment="Right" Grid.Row="1"  Grid.RowSpan="10" Background="Transparent" />
 
 
-        <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0 0 5 0" x:Name="treeViewDatabases" Grid.Row="1">
+        <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0,19,5,1" x:Name="treeViewDatabases" Grid.RowSpan="2">
+            <StackPanel Margin="-3 3 0 0" Orientation="Horizontal" >
+                <Button Click="ExpandCollapseTreeView" Padding="5 0" Content="Expand all" />
+                <Button Click="refreshToolStripMenuItem_Click" Padding="5 0" Content="Refreh" Margin="15 0 0 0" />
+            </StackPanel>
         </TreeView>
-        <TabControl x:Name="WorkingArea" Grid.Row="1" Grid.Column="1">
-            <TabControl.CommandBindings>
-                
-            </TabControl.CommandBindings>
+        <TabControl  x:Name="WorkingArea" Grid.Row="1" Grid.Column="1">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -94,10 +96,10 @@
                             </ListBox> -->
 
                             <WindowsFormsHost Grid.Row="1" >
-                                <wf:CheckedListBox  MultiColumn="True" CheckOnClick="True" x:Name="checkedListBox" />
+                                <wf:CheckedListBox BackColor="#2D2D30"  MultiColumn="True" CheckOnClick="True" x:Name="checkedListBox" ForeColor="White" BorderStyle="None" />
                             </WindowsFormsHost>
-                          
-                            <Grid Grid.Row="2" Margin="0 10">
+
+                            <Grid Grid.Row="2" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -114,7 +116,7 @@
                                          PreviewTextInput="PreviewTextInput" Margin="0 3" Grid.Column="1" Grid.Row="1" Text="250" />
                                 <Button  x:Name="ManagebtnRefresh"  Margin="4 2" Grid.Column="2" Content="Refresh" 
                                          ToolTip="(Ctrl+R) Refresh the Output grid" Click="RefreshReadData_Click" />
-                                <Button x:Name="PropertiesManageData" Padding="3 0"  Margin="4 2" ToolTip="(Ctrl+P) Display in the grid the table's properties (Mysql DESC analog)"
+                                <Button x:Name="PropertiesManageData" Margin="4 2" ToolTip="(Ctrl+P) Display in the grid the table's properties (Mysql DESC analog)"
                                         Click="PropertiesManageData_Click" Grid.Column="2" Grid.Row="1" Content="Tab. Properties" />
                             </Grid>
                         </Grid>
@@ -132,8 +134,8 @@
                         <Button IsEnabled="False" x:Name="ApplyChangesManageData" Click="btnSaveGridData_Click" Margin="0 0 8 0" Padding="5 3"
                                 Content="Apply changes" ToolTip="(Ctrl+Enter) Apply the changes done in the 'Output' Grid" />
                         <CheckBox x:Name="cbAutoApply" Grid.Column="1" Checked="checkBox1_CheckedChanged" Unchecked="checkBox1_CheckedChanged" IsChecked="True" VerticalAlignment="Center" Content="Auto apply (after edit)"/>
-                        <Button IsEnabled="False" x:Name="DiscardChangesManageData" Click="DiscardChangesReadData_Click" Grid.Column="1" HorizontalAlignment="Right" Padding = "5 3"  Content="Discard changes" />
-                        
+                        <Button IsEnabled="False" x:Name="DiscardChangesManageData" Click="DiscardChangesReadData_Click" Grid.Column="1" HorizontalAlignment="Right" Content="Discard changes" />
+
                     </Grid>
                 </Grid>
             </TabItem>
@@ -141,7 +143,7 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/img/icnQuery.png" Width="20" />
-                        <TextBlock Margin="5 0 0 0" Text="Execute query" />
+                        <TextBlock Margin="5 0 0 0" Text="Sql query" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
@@ -155,7 +157,7 @@
 
                     <GroupBox Grid.Row="0" Header="Querry">
                         <WindowsFormsHost Grid.Row="1">
-                            <wf:RichTextBox x:Name="qInp" AcceptsTab="True" TextChanged="qInp_TextChanged" KeyDown="qInp_KeyDown" />
+                            <wf:RichTextBox x:Name="qInp"  BackColor="#2D2D30" ForeColor="White" AcceptsTab="True" TextChanged="qInp_TextChanged" KeyDown="qInp_KeyDown" BorderStyle="None" />
                         </WindowsFormsHost>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="File">
@@ -175,13 +177,13 @@
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Grid.Row="2" Header="Output">
-                    <TextBox x:Name="qRez" Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
+                        <TextBox x:Name="qRez" Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"/>
                     </GroupBox>
-                    <StatusBar Grid.Row="3">
+                    <StatusBar Background="{StaticResource ResourceKey=LightBackground}" Foreground="{StaticResource ResourceKey=Foreground}" Grid.Row="3">
                         <StatusBarItem x:Name="toolStripStatusLabel1" Content="Saved"/>
                         <StatusBarItem x:Name="toolStripStatusLabel2" />
                     </StatusBar>
-                        
+
                 </Grid>
             </TabItem>
             <TabItem >
@@ -217,9 +219,6 @@
                         </StackPanel>
                     </GroupBox>
                 </Grid>
-            </TabItem>
-            <TabItem IsEnabled="False" BorderBrush="White" Background="White" Header="Database" Foreground="Black">
-                
             </TabItem>
 
         </TabControl>

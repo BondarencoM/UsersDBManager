@@ -38,6 +38,12 @@
     <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="MahApps.Metro, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.0.1\lib\net40\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.0.1\lib\net40\MahApps.Metro.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=8.0.13.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.8.0.13\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
@@ -67,6 +73,9 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.0.1\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -87,6 +96,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Central.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DarkStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,6 +169,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\icnGear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Selen.Wpf\Selen.Wpf.Core\Selen.Wpf.Core.csproj">
+      <Project>{c94c1bdd-11f9-4a3f-8929-86b1b67ae1d5}</Project>
+      <Name>Selen.Wpf.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Selen.Wpf\Selen.Wpf.GenericAppTree.Contracts\Selen.Wpf.GenericAppTree.Contracts.csproj">
+      <Project>{fc32ab02-5705-48e0-bcfd-78eb6c137aeb}</Project>
+      <Name>Selen.Wpf.GenericAppTree.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="Selen.Wpf\Selen.Wpf.GenericAppTree\Selen.Wpf.GenericAppTree.csproj">
+      <Project>{8615a3c0-298c-4b9d-8ffc-d5aca466523d}</Project>
+      <Name>Selen.Wpf.GenericAppTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="Selen.Wpf\Selen.Wpf.SystemStyles\Selen.Wpf.SystemStyles.csproj">
+      <Project>{a468315f-fa11-4bc2-8e5f-ea3c48b24c74}</Project>
+      <Name>Selen.Wpf.SystemStyles</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using System.Data.SqlClient;
 using Oracle.ManagedDataAccess.Client;
 
+
 namespace UDBM
 {
     
@@ -635,7 +636,7 @@ namespace UDBM
             int selStart = qInp.SelectionStart;
             qInp.Enabled = false;
             qInp.SelectAll();
-            qInp.SelectionColor = System.Drawing.Color.Black;
+            qInp.SelectionColor = System.Drawing.Color.White;
             qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Regular);
             qInp.Select(qInp.Text.Length, 0);
 
@@ -671,7 +672,7 @@ namespace UDBM
                         qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Bold);
 
                         qInp.Select(selectStart, 0);
-                        qInp.SelectionColor = System.Drawing.Color.Black;
+                        qInp.SelectionColor = System.Drawing.Color.White;
                         qInp.SelectionFont = new System.Drawing.Font(qInp.Font, System.Drawing.FontStyle.Regular);
                     }
                 }
@@ -831,6 +832,13 @@ namespace UDBM
                 OpenPreferences(sender, null);
 
         }
+
+        private void ExpandCollapseTreeView(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
 
         public void eveGoToTab2(object sender, RoutedEventArgs e)
         {

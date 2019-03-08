@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:UDBM"
         mc:Ignorable="d"
         Title="UDBM: Preferences" Height="400" Width="400"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Background="{StaticResource ResourceKey=Background}">
     <StackPanel Margin="5 0">
         <TextBlock Margin="5 0" FontSize="0.75cm" Text="Preferences" />
         <!--Manage Data-->

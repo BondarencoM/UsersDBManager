@@ -6,12 +6,9 @@
         xmlns:local="clr-namespace:UDBM"
         mc:Ignorable="d" 
         Title="User's DataBase Manager" Height="320" Width="270"
-        Icon="Icon1.ico">
-    <Window.Resources>
-        <Style TargetType="TextBox">
-            <Setter x:Name="TextBoxStyle" Property="Margin" Value="0 0 0 5" />
-        </Style>
-    </Window.Resources>
+        Icon="Icon1.ico"
+        Background="{StaticResource ResourceKey=Background}">
+ 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -39,6 +36,7 @@
                 <ComboBoxItem Content="Microsoft SQL Server"/>
                 <ComboBoxItem Content="Oracle" />
             </ComboBox>
+            
             
             <Grid Margin="0 5">
                 <CheckBox x:Name="inRemember" Content="Remember credentials" HorizontalAlignment="Left" VerticalAlignment="Center"/>
