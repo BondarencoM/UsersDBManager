@@ -164,9 +164,9 @@
                         <StackPanel>
                             <TextBox x:Name="queryName"/>
                             <StackPanel Orientation="Horizontal" Margin="0 10">
-                                <Button Click="ExecuteQuery" Width="85" Margin="5 0" Content="Execute" ToolTip="(F5) Execute the query"/>
-                                <Button Click ="button1_Click_1" Width="85" Margin="5 0" Content="Save" ToolTip="(Ctrl+S) Save .sql script"/>
-                                <Button Click="bSaveQuery_Click" Width="85" Margin="5 0" Content="Save as" ToolTip="(Ctrl+Shift+S) Save as .sql script" />
+                                <Button Click="ExecuteQuery" Width="85" Margin="5 0" Content="Execute (F5)" ToolTip="(F5) Execute the query"/>
+                                <Button Click ="button1_Click_1" Width="85" Margin="5 0" Content="Save" ToolTip="(Ctrl+S) Save the .sql script"/>
+                                <Button Click="bSaveQuery_Click" Width="85" Margin="5 0" Content="Save as" ToolTip="(Ctrl+Shift+S) Save as new .sql script" />
                             </StackPanel>
                             <StackPanel Margin="0 0 0 10" Orientation="Horizontal">
                                 <Button Width="85" Margin="5 0" Click="bOpenQuery_Click" Content="Open Querry" ToolTip="(Ctrl+O) Open a .sql script" />
