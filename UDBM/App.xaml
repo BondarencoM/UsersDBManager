@@ -9,13 +9,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack:/Selen.Wpf.SystemStyles;component/Styles.xaml"/>
                 <ResourceDictionary Source="DarkStyle.xaml"/>
-            
+
             </ResourceDictionary.MergedDictionaries>
+            
+            <Style TargetType="Window">
+                <Setter Property="Icon" Value="Icon1.ico" />
+            </Style>
+
         </ResourceDictionary>
-        
-       
-     
-        
-        
+
     </Application.Resources>
 </Application>
