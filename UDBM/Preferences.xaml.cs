@@ -54,7 +54,7 @@ namespace UDBM
             inServer.Text = Properties.Settings.Default.lgHost;
             inUsername.Text = Properties.Settings.Default.lgUser;
             inDbType.SelectedIndex = Properties.Settings.Default.lgDbType;
-            inLimit.Foreground = Brushes.Black;
+            inLimit.Foreground = Brushes.White;
         }
 
         private void ApplyBtnClick(object sender, RoutedEventArgs e)
@@ -69,7 +69,7 @@ namespace UDBM
             Properties.Settings.Default.lgUser = inUsername.Text;
             Properties.Settings.Default.lgDbType = inDbType.SelectedIndex;
             Properties.Settings.Default.Save();
-            inLimit.Foreground = Brushes.Black;
+            inLimit.Foreground = Brushes.White;
 
 
         }

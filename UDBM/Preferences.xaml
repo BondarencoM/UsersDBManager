@@ -11,10 +11,8 @@
     <StackPanel Margin="5 0">
         <TextBlock Margin="5 0" FontSize="0.75cm" Text="Preferences" />
         <!--Manage Data-->
-        <GroupBox>
-            <GroupBox.Header>
-                <TextBlock Text="Manage Data"/>
-            </GroupBox.Header>
+        <GroupBox Header="Manage Data">
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
