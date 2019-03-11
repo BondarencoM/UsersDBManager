@@ -551,7 +551,7 @@ namespace UDBM
                 result += Environment.NewLine;
             }
 
-            if (result == "") result = "Success !";
+            if (result == "") result = "Success ! \n0 Rows returned";
             qRez.Text = result;
 
             if (checkAutoselect.IsChecked == true)
