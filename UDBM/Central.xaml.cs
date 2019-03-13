@@ -92,13 +92,12 @@ namespace UDBM
         }
 
         #region General
-        private void Main_Load(object sender, EventArgs e)
+        private void Main_Load(object sender, RoutedEventArgs e)
         {
             this.Owner.Hide();
 
-            Console.WriteLine("Main_Load -> Start ListDatabases();");
+          
             ListDatabases();
-            Console.WriteLine("Main_Load -> Databases Listed;\n Start loading Preferences");
             loadPreferences();
 
         }
@@ -163,13 +162,10 @@ namespace UDBM
 
                     }
 
-                    Console.WriteLine("ListDatabases -> Process database " + dbname);
-
                     var dbNode = new TreeViewItem() { Header = dbname };
                     foreach (List<string> tbnames in listtb)
                     {
                         if (tbnames == null) continue;
-                        Console.WriteLine("ListDatabases -> Set tabele: " + tbnames[0]);
                         dbNode.Items.Add(new TreeViewItem() { Header = tbnames[0] });
                     }
 
@@ -837,8 +833,6 @@ namespace UDBM
         {
 
         }
-
-
 
         public void eveGoToTab2(object sender, RoutedEventArgs e)
         {
