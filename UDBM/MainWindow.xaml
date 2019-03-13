@@ -8,7 +8,12 @@
         Title="User's DataBase Manager" Height="320" Width="270"
         Icon="Icon1.ico"
         Background="{StaticResource ResourceKey=Background}">
- 
+    <Window.Resources>
+        <Style TargetType="TextBlock" >
+            <Setter Property="Margin" Value="0 7 0 0" />
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -24,18 +29,22 @@
         </Menu>
         <StackPanel Grid.Row="1" Grid.Column="1">
             <TextBlock Text="Log in" FontSize="28" TextAlignment="Center" />
+
+            <TextBlock Text="Database type" />
+            <ComboBox SelectedIndex="0" x:Name="inType">
+                <ComboBoxItem Content="MySQL"/>
+                <ComboBoxItem Content="PostgreSQL"/>
+                <ComboBoxItem Content="Microsoft SQL Server"/>
+                <ComboBoxItem Content="Oracle" />
+            </ComboBox>
+
             <TextBlock Text="Host" />
             <TextBox x:Name="inHost" />
             <TextBlock Text="User" />
             <TextBox x:Name="inUser" />
             <TextBlock Text="Password" />
             <PasswordBox x:Name="inPassword" Margin="0 0 0 5"/>
-            <ComboBox SelectedIndex="0" x:Name="inType" Margin="0 6 0 0">
-                <ComboBoxItem Content="MySQL"/>
-                <ComboBoxItem Content="PostgreSQL"/>
-                <ComboBoxItem Content="Microsoft SQL Server"/>
-                <ComboBoxItem Content="Oracle" />
-            </ComboBox>
+
             
             
             <Grid Margin="0 5">
