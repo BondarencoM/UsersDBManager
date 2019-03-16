@@ -39,8 +39,6 @@ namespace UDBM
 
         public Central()
         {
-
-
             InitializeComponent();
             highlightKeyWords = ("select use insert create values table database column alter change drop and or abs sum avg * as null int char" +
                                   "varchar text blob decimal float where limit day month year desc delete trunc truncate transaction rollback" +
@@ -92,14 +90,10 @@ namespace UDBM
         }
 
         #region General
-        private void Main_Load(object sender, RoutedEventArgs e)
+        public void Main_Load(object sender, EventArgs e)
         {
-            this.Owner.Hide();
-
-          
             ListDatabases();
             loadPreferences();
-
         }
 
         private void ListDatabases()
@@ -164,8 +158,8 @@ namespace UDBM
 
                     var dbNode = new TreeViewItem() { Header = dbname };
                     foreach (List<string> tbnames in listtb)
-                    {
-                        if (tbnames == null) continue;
+                        {
+                            if (tbnames == null) continue;
                         dbNode.Items.Add(new TreeViewItem() { Header = tbnames[0] });
                     }
 
@@ -226,7 +220,6 @@ namespace UDBM
             }
             if (!String.IsNullOrWhiteSpace(sqlSelectCols)) sqlSelectCols = sqlSelectCols.Remove(sqlSelectCols.Length - 1);
             else sqlSelectCols = "*";
-            Console.WriteLine("ListDatabases -> Selection: " + sqlSelectCols);
 
             if (!String.IsNullOrWhiteSpace(condition)) condition = "Where " + condition + " ";
 
@@ -260,7 +253,6 @@ namespace UDBM
                     MessageBox.Show("ListDatabases -> Switch not implemented at SelectTable dbVar = " + dbVar);
                     throw new Exception("Switch not implemented at Main.cs SelectTable");
             }
-            Console.WriteLine("ListDatabases -> SelectTable: exec querry: " + query);
             DataTable tableData = db.GetDataSet(query, tbname);
             if (tableData != null)
             {

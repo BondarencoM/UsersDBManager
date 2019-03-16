@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:UDBM"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d" 
-        Loaded="Main_Load" Unloaded="Window_Unloaded"
+        ContentRendered="Main_Load"
+        Unloaded="Window_Unloaded"
         Title="Central" Height="450" Width="650"
         StateChanged="Window_StateChanged"
         Background="{StaticResource ResourceKey=Background}">
