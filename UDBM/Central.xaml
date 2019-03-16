@@ -66,7 +66,7 @@
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/img/icnGrid.png" Width="20" />
+                        <Image Source="/img/icnGrid.png" Width="13" />
                         <TextBlock Margin="5 0 0 0" Text="Manage data" />
                     </StackPanel>
                 </TabItem.Header>
@@ -142,7 +142,7 @@
             <TabItem >
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/img/icnQuery.png" Width="20" />
+                        <Image Source="/img/icnQuery.png" Width="7" />
                         <TextBlock Margin="5 0 0 0" Text="Sql query" />
                     </StackPanel>
                 </TabItem.Header>
@@ -189,7 +189,7 @@
             <TabItem >
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/img/icnGear.png" Width="20" />
+                        <Image Source="/img/icnGear.png" Width="16" />
                         <TextBlock Margin="5 0 0 0" Text="Table properties" />
                     </StackPanel>
                 </TabItem.Header>
