@@ -98,6 +98,25 @@ namespace UDBM
 
         private void ListDatabases()
         {
+            treeViewDatabases.Items.Clear();
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Horizontal;
+
+            Button b1 = new Button();
+            b1.Content = "Expand all";
+            b1.Click += ExpandCollapseTreeView;
+            b1.Margin = new Thickness(0, 7, 10, 7);
+            stackPanel.Children.Add(b1);
+
+            Button b2 = new Button();
+            b2.Content = "Refresh";
+            b2.Click += refreshToolStripMenuItem_Click;
+            b2.Margin = new Thickness(0, 7, 10, 7);
+            stackPanel.Children.Add(b2);
+
+            treeViewDatabases.Items.Add(stackPanel);
+
+
             try
             {
                 List<List<string>> listdb = null;
@@ -158,8 +177,8 @@ namespace UDBM
 
                     var dbNode = new TreeViewItem() { Header = dbname };
                     foreach (List<string> tbnames in listtb)
-                        {
-                            if (tbnames == null) continue;
+                    {
+                        if (tbnames == null) continue;
                         dbNode.Items.Add(new TreeViewItem() { Header = tbnames[0] });
                     }
 
@@ -175,10 +194,9 @@ namespace UDBM
         private void RefreshDatabasesTree()
         {
             TreeViewItem selectedNode = (TreeViewItem)treeViewDatabases.SelectedItem;
-            treeViewDatabases.Items.Clear();
             this.ListDatabases();
 
-            var tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[0]) as TreeViewItem;
+            var tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[1]) as TreeViewItem;
             if (tvi != null) tvi.IsSelected = true;
 
             checkedListBox.Items.Clear();

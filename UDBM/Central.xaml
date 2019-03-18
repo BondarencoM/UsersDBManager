@@ -58,9 +58,8 @@
 
 
         <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0,19,5,1" x:Name="treeViewDatabases" Grid.RowSpan="2">
-            <StackPanel Margin="-3 3 0 0" Orientation="Horizontal" >
-                <Button Click="ExpandCollapseTreeView" Padding="5 0" Content="Expand all" />
-                <Button Click="refreshToolStripMenuItem_Click" Padding="5 0" Content="Refreh" Margin="15 0 0 0" />
+            <StackPanel>
+                <TextBlock x:Name="LoadMessage" FontSize="0.5cm" Text="Connecting..." />
             </StackPanel>
         </TreeView>
         <TabControl  x:Name="WorkingArea" Grid.Row="1" Grid.Column="1">
