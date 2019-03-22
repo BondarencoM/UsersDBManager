@@ -48,10 +48,35 @@
                 <MenuItem Height="20" Header="_Exit application" Click="SelectDatabaseForm_FormClosed"/>
             </MenuItem>
             <MenuItem Header="Preferences" Click="OpenPreferences" />
-            <TextBlock Text="Database:"/>
-            <TextBlock x:Name="dispDatabase" />
-            <TextBlock Text="Table:"/>
-            <TextBlock x:Name="dispTable" />
+            <MenuItem>
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Database: "/>
+                        <TextBlock x:Name="dispDatabase" />
+                    </StackPanel>
+                </MenuItem.Header>
+                <MenuItem Header="Rename" />
+                <Separator />
+                <MenuItem Header="Hide" />
+                <MenuItem Header="Drop" />
+            </MenuItem>
+            <MenuItem>
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Table: " />
+                        <TextBlock x:Name="dispTable" />
+                    </StackPanel>
+                </MenuItem.Header>
+                <MenuItem Header="Rename">
+                    <TextBox x:Name="tPropName" Width="150" />
+                    <Button Content="Confirm" Click="tPropSave_Click" />
+                    <Button Content="Cancel" Click="btnRenameCancel_Click" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Delete all" Click="tPropDelAll_Click" />
+                <MenuItem Header="Truncate" Click="tPropTrunc_Click" />
+                <MenuItem Header="Drop" Click="button1_Click" />
+            </MenuItem>
         </Menu>
         <GridSplitter IsMouseCaptureWithinChanged="GridSplitter_IsMouseCaptureWithinChanged" Width="4" 
                        HorizontalAlignment="Right" Grid.Row="1"  Grid.RowSpan="10" Background="Transparent" />
@@ -184,40 +209,6 @@
                         <StatusBarItem x:Name="toolStripStatusLabel2" />
                     </StatusBar>
 
-                </Grid>
-            </TabItem>
-            <TabItem >
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/img/icnGear.png" Width="16" />
-                        <TextBlock Margin="5 0 0 0" Text="Table properties" />
-                    </StackPanel>
-                </TabItem.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <GroupBox Header="Rename">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="tPropName" />
-                            <Button Content="Rename" Click="tPropSave_Click" Grid.Column="1" Padding="7 0" Margin="7 0" />
-                            <Button Content="Cancel" Click="btnRenameCancel_Click" Grid.Column="2" Padding="8 0" Margin="0 0 7 0" />
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="Risk Zone">
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Click="tPropDelAll_Click" Padding="10" Margin="10 5" Width="90" Content="Delete all"/>
-                            <Button Click="button1_Click" Padding="10" Margin="10 5" Width="90" Content="Drop table"/>
-                            <Button Click="tPropTrunc_Click" Padding="10" Margin="10 5" Width="90" Content="Truncate"/>
-                        </StackPanel>
-                    </GroupBox>
                 </Grid>
             </TabItem>
 
