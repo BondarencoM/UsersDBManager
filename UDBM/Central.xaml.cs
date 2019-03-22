@@ -98,14 +98,17 @@ namespace UDBM
 
         private void ListDatabases()
         {
+            // Add the 2 buttons (Expand all and Refresh)
             treeViewDatabases.Items.Clear();
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = Orientation.Horizontal;
+            stackPanel.Name = "treeViewBtns";
 
             Button b1 = new Button();
             b1.Content = "Expand all";
             b1.Click += ExpandCollapseTreeView;
             b1.Margin = new Thickness(0, 7, 10, 7);
+            b1.Name = "ExpandAllBtn";
             stackPanel.Children.Add(b1);
 
             Button b2 = new Button();
@@ -193,10 +196,9 @@ namespace UDBM
 
         private void RefreshDatabasesTree()
         {
-            TreeViewItem selectedNode = (TreeViewItem)treeViewDatabases.SelectedItem;
             this.ListDatabases();
 
-            var tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[1]) as TreeViewItem;
+            TreeViewItem tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[1]) as TreeViewItem;
             if (tvi != null) tvi.IsSelected = true;
 
             checkedListBox.Items.Clear();
@@ -300,6 +302,27 @@ namespace UDBM
                  ManageDataGrid.Columns[0].Width = 50;*/
         }
 
+        private void ExpandCollapseTreeView(object sender, RoutedEventArgs e)
+        {
+            Button b1 = (Button)((StackPanel)treeViewDatabases.Items[0]).Children[0];
+            
+            bool toExpand;
+            if ( (String)b1.Content == "Expand all")
+            {
+                b1.Content = "Collapse all";
+                toExpand = true;
+            }
+            else
+            {
+                b1.Content = "Expand all";
+                toExpand = false;
+            }
+
+            foreach ( Object tvi in treeViewDatabases.Items)
+                if(tvi is TreeViewItem)
+                    ((TreeViewItem)tvi).IsExpanded = toExpand; 
+        }
+
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             this.Owner.Show();
@@ -362,7 +385,7 @@ namespace UDBM
         #region Manage Data
         private void RefreshReadData_Click(object sender, EventArgs e)
         {
-            TreeViewItem sel = (TreeViewItem)treeViewDatabases.SelectedItem;
+            Control sel = (TreeViewItem)treeViewDatabases.SelectedItem;
 
             if (sel.Parent != (DependencyObject)treeViewDatabases)
                 this.SelectTable(sender, false, userWhere.Text);
@@ -400,7 +423,7 @@ namespace UDBM
                 Console.WriteLine("Eror at Try Catch at PropertiesManageData_Click. Message: " + ex.Message);
                 return;
             }
-            if ((string)PropertiesManageData.Content == "Manage Data")
+            if ((string)PropertiesManageData.Content == "Manage Data" && treeViewDatabases.SelectedItem is TreeViewItem)
             {
                 TreeViewItem seletedItem = (TreeViewItem)treeViewDatabases.SelectedItem;
 
@@ -836,11 +859,6 @@ namespace UDBM
                 bOpenQuery_Click(sender, null);
             else if (e.KeyCode == System.Windows.Forms.Keys.Oemcomma && e.Control == true)
                 OpenPreferences(sender, null);
-
-        }
-
-        private void ExpandCollapseTreeView(object sender, RoutedEventArgs e)
-        {
 
         }
 
