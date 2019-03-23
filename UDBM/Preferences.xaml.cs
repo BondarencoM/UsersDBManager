@@ -55,6 +55,7 @@ namespace UDBM
             inUsername.Text = Properties.Settings.Default.lgUser;
             inDbType.SelectedIndex = Properties.Settings.Default.lgDbType;
             inLimit.Foreground = Brushes.White;
+            hiddenDbs.ItemsSource = Properties.Settings.Default.prHiddenDbs;
         }
 
         private void ApplyBtnClick(object sender, RoutedEventArgs e)
@@ -83,6 +84,20 @@ namespace UDBM
         private void CloseBtnClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void RemoveDbFromListOfHidden(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.prHiddenDbs.Remove((sender as Control).ToolTip as String);
+            hiddenDbs.Items.Refresh();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(toHideDb.Text))
+                return;
+            Properties.Settings.Default.prHiddenDbs.Add(toHideDb.Text.ToLower());
+            hiddenDbs.Items.Refresh();
         }
     }
 }

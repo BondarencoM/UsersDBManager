@@ -152,6 +152,9 @@ namespace UDBM
                 {
 
                     if (dbnames == null) continue;
+                    if (Properties.Settings.Default.prHiddenDbs.Contains(dbnames[0]))
+                        continue;
+
                     string dbname = dbnames[0];
                     List<List<string>> listtb = new List<List<string>>();
 
@@ -175,7 +178,6 @@ namespace UDBM
                         default:
                             MessageBox.Show(db.dbVar + " database switch not implemented at  private void ListDatabases(DBConnect db)");
                             break;
-
                     }
 
                     var dbNode = new TreeViewItem() { Header = dbname };
@@ -207,11 +209,13 @@ namespace UDBM
 
             tPropName.Text = "";
 
-            userLimit.Text = "250";
+            
             userWhere.Text = "";
 
             dispDatabase.Text = "";
             dispTable.Text = "";
+
+            loadPreferences();
 
             // if (((TreeViewItem)treeViewDatabases.SelectedItem).Parent != treeViewDatabases)
             //     ((TreeViewItem)((TreeViewItem)treeViewDatabases.SelectedItem).Parent).IsExpanded = true;
@@ -823,7 +827,6 @@ namespace UDBM
             MessageBox.Show(e.Error.Exception.Message, "UDBM:Data grid error ", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
         private void databaseDropMenuItemClick(object sender, RoutedEventArgs e)
         {
             try
@@ -839,6 +842,14 @@ namespace UDBM
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(actualDatabase)) return;
+            Properties.Settings.Default.prHiddenDbs.Add(actualDatabase);
+            Properties.Settings.Default.Save();
+            RefreshDatabasesTree();
         }
 
         #endregion

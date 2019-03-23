@@ -118,5 +118,23 @@ namespace UDBM.Properties {
                 this["prAutoRefresh"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>information_schema</string>
+  <string>mysql</string>
+  <string>phpmyadmin</string>
+  <string>performance_schema</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection prHiddenDbs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["prHiddenDbs"]));
+            }
+            set {
+                this["prHiddenDbs"] = value;
+            }
+        }
     }
 }

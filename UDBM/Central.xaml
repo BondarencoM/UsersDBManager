@@ -56,7 +56,7 @@
                     </StackPanel>
                 </MenuItem.Header>
                 <Separator />
-                <MenuItem Header="Hide" />
+                <MenuItem Header="Hide" Click="MenuItem_Click" />
                 <MenuItem Header="Drop" Click="databaseDropMenuItemClick" />
             </MenuItem>
             <MenuItem>
