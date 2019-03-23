@@ -559,13 +559,11 @@ namespace UDBM
             {
                 DiscardChangesManageData.IsEnabled = false;
                 ApplyChangesManageData.IsEnabled = false;
-                ManageDataGrid.RowEditEnding += btnSaveGridData_Click;
             }
             else
             {
                 DiscardChangesManageData.IsEnabled = true;
                 ApplyChangesManageData.IsEnabled = true;
-                ManageDataGrid.RowEditEnding -= btnSaveGridData_Click;
             }
         }
 
@@ -573,6 +571,31 @@ namespace UDBM
         {
             updateDbFromDataGrid(ManageDataSet);
         }
+
+        private void ManageDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if ((bool)cbAutoApply.IsChecked)
+            {
+
+                (sender as DataGrid).RowEditEnding -= ManageDataGrid_RowEditEnding;
+                (sender as DataGrid).CommitEdit();
+                (sender as DataGrid).Items.Refresh();
+                (sender as DataGrid).RowEditEnding += ManageDataGrid_RowEditEnding;
+                updateDbFromDataGrid(ManageDataSet);
+
+
+                //AutoSaveBeaconSet();
+            }
+        }
+
+        private async void AutoSaveBeaconSet()
+        {
+            AutosaveBeacon.Text = "Autosaved";
+            await Task.Delay(2500);
+            AutosaveBeacon.Text = "";
+        }
+
+
 
         #endregion
 
@@ -954,15 +977,15 @@ namespace UDBM
 
 /*
 To do:
+ * delete row from datagrids
  * actual db vs display db
  * sortarea
  * Lucru cu scheme
  * De permis de introdus orice querry in Manage data (sau tab plain, tab grid la execute querry)
- * Fix auto apply
  * rename pentru Postgre
  * refactoring la denmiri
  * Preferences de adaugat tooltips
- * DB-s expand all
+ * 
  *
  * 
 */
