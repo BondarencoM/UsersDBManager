@@ -499,6 +499,13 @@ namespace UDBM
             try
             {
                 newNode = (TreeViewItem)oe.NewValue;
+
+                if (newNode.Parent == (DependencyObject)treeViewDatabases)
+                {
+                    actualDatabase = (String)newNode.Header;
+                    actualTable = "";
+                    refreshDisplayDbTb();
+                }
                 newParent = (TreeViewItem)newNode.Parent;
                 oldNode = (TreeViewItem)oe.OldValue;
             }
@@ -709,7 +716,7 @@ namespace UDBM
         }
         #endregion
 
-        #region Properties
+        #region Menu strip
         private void tPropSave_Click(object sender, RoutedEventArgs e)
         {
             string selecteTable = (string)((TreeViewItem)treeViewDatabases.SelectedItem).Header;
@@ -719,7 +726,7 @@ namespace UDBM
             try
             {
                 db.usedb(actualDatabase);
-                List<List<string>> rez = db.Select("ALTER TABLE " + selecteTable + " RENAME TO " + tPropName.Text);
+                List<List<string>> rez = db.Select($"ALTER TABLE {selecteTable} RENAME TO {tPropName.Text}");
                 this.RefreshDatabasesTree();
 
             }
@@ -787,9 +794,7 @@ namespace UDBM
                 MessageBox.Show(ex.Message);
             }
         }
-        #endregion
-
-        #region Menu strip
+        
         private void logOutToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -816,6 +821,24 @@ namespace UDBM
         private void ManageDataGrid_Error(object sender, ValidationErrorEventArgs e)
         {
             MessageBox.Show(e.Error.Exception.Message, "UDBM:Data grid error ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+
+        private void databaseDropMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string querry = $"DROP DATABASE  {actualDatabase} ;";
+                if (MessageBox.Show($"Are you sure you want to execute ? \n {querry}", "UDBM Error", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    List<List<string>> rez = db.Select(querry);
+                    this.RefreshDatabasesTree();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #endregion

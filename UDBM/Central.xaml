@@ -55,10 +55,9 @@
                         <TextBlock x:Name="dispDatabase" />
                     </StackPanel>
                 </MenuItem.Header>
-                <MenuItem Header="Rename" />
                 <Separator />
                 <MenuItem Header="Hide" />
-                <MenuItem Header="Drop" />
+                <MenuItem Header="Drop" Click="databaseDropMenuItemClick" />
             </MenuItem>
             <MenuItem>
                 <MenuItem.Header>
@@ -80,7 +79,6 @@
         </Menu>
         <GridSplitter IsMouseCaptureWithinChanged="GridSplitter_IsMouseCaptureWithinChanged" Width="4" 
                        HorizontalAlignment="Right" Grid.Row="1"  Grid.RowSpan="10" Background="Transparent" />
-
 
         <TreeView SelectedItemChanged="treeViewDatabases_BeforeSelect" Margin="0,19,5,1" x:Name="treeViewDatabases" Grid.RowSpan="2">
             <StackPanel>
