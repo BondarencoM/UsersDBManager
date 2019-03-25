@@ -4,8 +4,7 @@
         <ResourceDictionary Source="pack://application:,,,/Selen.Wpf.Core;component/Resources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="StandardDataGrid" TargetType="DataGrid">
-        <Setter Property="SelectionUnit" Value="Cell"/>
-        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Background" Value="{StaticResource LightBackground}"/>
@@ -104,3 +103,9 @@
         </Style.Resources>
     </Style>
 </ResourceDictionary>
+    
+<!-- This section contains a notice of all the changes to the file, as per Code Project Open License
+    1) 2019-03-25 Remove  <Setter Property="SelectionUnit" Value="Cell"/> 
+    2) 2019-03-25 Setter with Property="SelectionUnit" set to Value="Cell"
+    
+-->
