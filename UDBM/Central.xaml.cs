@@ -199,6 +199,8 @@ namespace UDBM
         private void RefreshDatabasesTree()
         {
             this.ListDatabases();
+            if (treeViewDatabases.Items.Count < 2)
+                return;
 
             TreeViewItem tvi = treeViewDatabases.ItemContainerGenerator.ContainerFromItem(treeViewDatabases.Items[1]) as TreeViewItem;
             if (tvi != null) tvi.IsSelected = true;
@@ -401,6 +403,7 @@ namespace UDBM
             try
             {
                 db.DataGridAdapter.Update(data);
+                AutoSaveBeaconSet("Saved");
             }
             catch (Exception ex)
             {
@@ -582,18 +585,18 @@ namespace UDBM
                 (sender as DataGrid).Items.Refresh();
                 (sender as DataGrid).RowEditEnding += ManageDataGrid_RowEditEnding;
                 updateDbFromDataGrid(ManageDataSet);
-
-
-                //AutoSaveBeaconSet();
+                AutoSaveBeaconSet("Autosaved");
             }
         }
 
-        private async void AutoSaveBeaconSet()
+        private async void AutoSaveBeaconSet(String message)
         {
-            AutosaveBeacon.Text = "Autosaved";
+            datagridSavedBeacon.Text = message;
             await Task.Delay(2500);
-            AutosaveBeacon.Text = "";
+            datagridSavedBeacon.Text = "";
         }
+
+
 
 
 
@@ -683,7 +686,6 @@ namespace UDBM
                 toolStripStatusLabel2.Content = openFileDialog1.FileName;
             }
         }
-
 
         private void qInp_TextChanged(object sender, EventArgs e)
         {
