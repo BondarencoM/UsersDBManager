@@ -184,7 +184,11 @@ namespace UDBM
                     foreach (List<string> tbnames in listtb)
                     {
                         if (tbnames == null) continue;
-                        dbNode.Items.Add(new TreeViewItem() { Header = tbnames[0] });
+
+                        TreeViewItem toAdd = new TreeViewItem();
+                        toAdd.Header = tbnames[0];
+                        toAdd.Style = FindResource("TerminalTreeViewItem") as Style;
+                        dbNode.Items.Add(toAdd);
                     }
 
                     treeViewDatabases.Items.Add(dbNode);
@@ -386,6 +390,7 @@ namespace UDBM
             }
             
         }
+
         #endregion
 
         #region Manage Data
@@ -579,7 +584,6 @@ namespace UDBM
         {
             if ((bool)cbAutoApply.IsChecked)
             {
-
                 (sender as DataGrid).RowEditEnding -= ManageDataGrid_RowEditEnding;
                 (sender as DataGrid).CommitEdit();
                 (sender as DataGrid).Items.Refresh();
@@ -595,10 +599,6 @@ namespace UDBM
             await Task.Delay(2500);
             datagridSavedBeacon.Text = "";
         }
-
-
-
-
 
         #endregion
 
@@ -979,7 +979,6 @@ namespace UDBM
 
 /*
 To do:
- * delete row from datagrids
  * actual db vs display db
  * sortarea
  * Lucru cu scheme

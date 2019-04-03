@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UDBM"
         mc:Ignorable="d"
-        Title="UDBM: Preferences" Height="400" Width="600"
+        Title="UDBM: Preferences" Height="400" Width="700"
         Loaded="Window_Loaded"
         Background="{StaticResource ResourceKey=Background}">
   
