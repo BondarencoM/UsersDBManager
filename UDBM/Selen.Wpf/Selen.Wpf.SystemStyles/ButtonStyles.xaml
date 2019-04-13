@@ -14,7 +14,8 @@
                     <Border SnapsToDevicePixels="True"
 				            BorderThickness="1"
 				            BorderBrush="{TemplateBinding BorderBrush}" 
-				            Background="{TemplateBinding Background}">
+				            Background="{TemplateBinding Background}"
+                            Padding="0 3" >
                         <Grid SnapsToDevicePixels="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5" />
@@ -61,4 +62,5 @@
 
 <!-- This section contains a notice of all the changes to the file, as per Code Project Open License
     1) 2019-03-08 Add columns for the grid in the template setter, add content presenter to column nr 1
+    2) 2019-04-05 Add padding 0 3 to button border 
 -->
